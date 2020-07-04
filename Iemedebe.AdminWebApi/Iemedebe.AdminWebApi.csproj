@@ -10,7 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Iemedebe.BusinessLogic\Iemedebe.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Iemedebe.DataAccess\Iemedebe.DataAccess.csproj" />
+    <ProjectReference Include="..\Iemedebe.Domain\Iemedebe.Domain.csproj" />
+    <ProjectReference Include="..\Iemedebe.Exceptions\Iemedebe.Exceptions.csproj" />
   </ItemGroup>
 
 
