@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Iemedebe.Domain\Iemedebe.Domain.csproj" />
+    <ProjectReference Include="..\Iemedebe.Exceptions\Iemedebe.Exceptions.csproj" />
+  </ItemGroup>
+
 </Project>
