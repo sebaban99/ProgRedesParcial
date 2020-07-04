@@ -8,6 +8,8 @@ namespace Iemedebe.Domain
 {
     public class Rating
     {
+        public Guid Id { get; set; }
+
         public int Score { get; set; }
 
         public Film RatedFilm { get; set; }
