@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Iemedebe.Domain;
 
-namespace Iemedebe.CommonsWebApi
+namespace Iemedebe.CommonWebApi
 {
     public class DirectorDTO
     {

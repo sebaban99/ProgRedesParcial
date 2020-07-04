@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Iemedebe.Domain;
 
-namespace Iemedebe.CommonsWebApi
+namespace Iemedebe.CommonWebApi
 {
     public class UserDTO
     {

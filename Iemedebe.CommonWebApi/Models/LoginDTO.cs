@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Iemedebe.CommonsWebApi
+namespace Iemedebe.CommonWebApi
 {
     public class LoginDTO
     {
@@ -9,5 +9,7 @@ namespace Iemedebe.CommonsWebApi
 
         [Required]
         public string Password { get; set; }
+
+        public LoginDTO() { }
     }
 }
