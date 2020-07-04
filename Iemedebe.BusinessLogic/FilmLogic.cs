@@ -26,6 +26,11 @@ namespace Iemedebe.BusinessLogic
             throw new NotImplementedException();
         }
 
+        public Task<Film> AddRatingAsync(Rating rating)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Film> CreateAsync(Film entity)
         {
             try
@@ -56,6 +61,11 @@ namespace Iemedebe.BusinessLogic
             return await filmRepository.GetByConditionAsync(expression).ConfigureAwait(false);
         }
 
+        public Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task RemoveAsync(Film entity)
         {
             try
@@ -71,6 +81,11 @@ namespace Iemedebe.BusinessLogic
         }
 
         public async Task<Film> RemoveGenreAsync(Film entity, Genre genre)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRatingAsync(Guid idFilm, Guid idRating)
         {
             throw new NotImplementedException();
         }
