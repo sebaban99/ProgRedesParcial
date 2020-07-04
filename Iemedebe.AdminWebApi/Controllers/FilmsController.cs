@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using System.Web.Http;
 using System.Web;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
@@ -108,10 +108,10 @@ namespace Iemedebe.AdminWebApi.Controllers
             try
             {
 
-                var filmToUpdate = await filmLogic.GetAsync(id).ConfigureAwait(false);
+                var originalFilm = await filmLogic.GetAsync(id).ConfigureAwait(false);
                 var updatedFilm = model.ToEntity();
-                await filmLogic.UpdateAsync(updatedFilm, filmToUpdate);
-                return Ok("Film successfully updated");
+                var modifiedEntity = await filmLogic.UpdateAsync(updatedFilm, originalFilm);
+                return Ok(new FilmDTO(modifiedEntity));
             }
             catch (Exception e)
             {
@@ -119,5 +119,55 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("{id}/ratings")]
+        public async Task<IHttpActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
+        {
+            await Task.Yield();
+            try
+            {
+                var rating = ratingDTO.ToEntity();
+                var film = await filmLogic.AddRatingAsync(rating).ConfigureAwait(false);
+                return Ok(new FilmDTO(film));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("{id}/ratings/{idRating}")]
+        public async Task<IHttpActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO ratingDTO)
+        {
+            await Task.Yield();
+            try
+            {
+                ratingDTO.Id = idRating;
+                var rating = ratingDTO.ToEntity();
+                var film = await filmLogic.PutRatingAsync(id,rating).ConfigureAwait(false);
+                return Ok(new FilmDTO(film));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("{id}/ratings/{idRating}")]
+        public async Task<IHttpActionResult> DeleteRatingAsync(Guid id, Guid idRating)
+        {
+            await Task.Yield();
+            try
+            {
+                await filmLogic.RemoveRatingAsync(id, idRating).ConfigureAwait(false);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

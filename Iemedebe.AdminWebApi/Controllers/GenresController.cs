@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Iemedebe.Domain;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
-using Iemedebe.CommonsWebApi;
 using System.Web.Http;
 using System.Web;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
@@ -109,10 +108,10 @@ namespace Iemedebe.AdminWebApi.Controllers
             try
             {
 
-                var genreToUpdate = await genreLogic.GetAsync(id).ConfigureAwait(false);
+                var originalGenre = await genreLogic.GetAsync(id).ConfigureAwait(false);
                 var updatedGenre = model.ToEntity();
-                await genreLogic.UpdateAsync(updatedGenre, genreToUpdate);
-                return Ok("Genre successfully updated");
+                var modifiedEntity = await genreLogic.UpdateAsync(updatedGenre, originalGenre);
+                return Ok(new GenreDTO(modifiedEntity));
             }
             catch (Exception e)
             {

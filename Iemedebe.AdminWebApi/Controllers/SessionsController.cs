@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Iemedebe.BusinessLogic;
 using Iemedebe.DataAccess;
 using Iemedebe.Domain;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using Iemedebe.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
@@ -33,6 +33,8 @@ namespace Iemedebe.AdminWebApi
         [HttpPost]
         public async Task<IHttpActionResult> Login([FromBody] LoginDTO model)
         {
+            await Task.Yield();
+
             User loggedUser = await sessionLogic.ValidateLogin(model.Email, model.Password).ConfigureAwait(false);
             if (loggedUser == null)
             {
@@ -50,6 +52,8 @@ namespace Iemedebe.AdminWebApi
         [Route("{id}")]
         public async Task<IHttpActionResult> LogOut(Guid id)
         {
+            await Task.Yield();
+
             try
             {
                 await sessionLogic.DeleteSession(id).ConfigureAwait(false);
