@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Iemedebe.Domain;
 
-namespace Iemedebe.AdminWebApi
+namespace Iemedebe.CommonsWebApi
 {
     public class GenreDTO
     {

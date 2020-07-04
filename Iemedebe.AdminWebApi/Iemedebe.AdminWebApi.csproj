@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Iemedebe.DataAccess\Iemedebe.DataAccess.csproj" />
     <ProjectReference Include="..\Iemedebe.Domain\Iemedebe.Domain.csproj" />
     <ProjectReference Include="..\Iemedebe.Exceptions\Iemedebe.Exceptions.csproj" />
+    <ProjectReference Include="..\Iemedebe.WebApi.Commons\Iemedebe.Co.csproj" />
   </ItemGroup>
 
 

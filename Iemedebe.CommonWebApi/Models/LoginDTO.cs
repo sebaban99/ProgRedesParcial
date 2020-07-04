@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Iemedebe.UserWebApi
+namespace Iemedebe.CommonsWebApi
 {
     public class LoginDTO
     {

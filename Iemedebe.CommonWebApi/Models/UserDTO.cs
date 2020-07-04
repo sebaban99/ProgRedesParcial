@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Iemedebe.Domain;
-using Microsoft.AspNetCore.Server.IIS.Core;
 
-namespace Iemedebe.AdminWebApi
+namespace Iemedebe.CommonsWebApi
 {
     public class UserDTO
     {

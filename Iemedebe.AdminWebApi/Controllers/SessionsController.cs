@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Iemedebe.BusinessLogic;
 using Iemedebe.DataAccess;
 using Iemedebe.Domain;
+using Iemedebe.CommonsWebApi;
 using Iemedebe.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
