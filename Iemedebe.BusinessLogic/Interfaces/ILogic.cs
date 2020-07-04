@@ -8,15 +8,16 @@ namespace Iemedebe.BusinessLogic
 {
     public interface ILogic<T>
     {
-        Task<T> GetByCondition(Expression<Func<T, bool>> expression);
+        Task<T> GetByConditionAsync(Expression<Func<T, bool>> expression);
 
-        Task<T> Create(T entity);
+        Task<T> CreateAsync(T entity);
 
-        Task Remove(T entity);
+        Task RemoveAsync(T entity);
 
-        Task<T> Update(T entity);
+        Task<T> UpdateAsync(T modifiedEntity, T originalEntity);
 
-        Task<List<T>> GetAll();
-        Task<T> Get(Guid id);
+        Task<List<T>> GetAllAsync();
+
+        Task<T> GetAsync(Guid id);
     }
 }
