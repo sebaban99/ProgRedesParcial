@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Iemedebe.DataAccess\Iemedebe.DataAccess.csproj" />
+    <ProjectReference Include="..\Iemedebe.Domain\Iemedebe.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
