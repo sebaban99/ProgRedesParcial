@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Iemedebe.BusinessLogic.Validators
+namespace Iemedebe.BusinessLogic
 {
-    class UserValidator : IValidator<User>
+    public class UserValidator : IValidator<User>
     {
         private readonly IRepository<User> userRepository;
 

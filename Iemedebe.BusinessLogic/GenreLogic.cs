@@ -12,34 +12,74 @@ namespace Iemedebe.BusinessLogic
 {
     public class GenreLogic : ILogic<Genre>
     {
+        private readonly IValidator<Genre> genreValidator;
+        private readonly IRepository<Genre> genreRepository;
+
+        public GenreLogic(IRepository<Genre> genreRepository, IValidator<Genre> genreValidator)
+        {
+            this.genreRepository = genreRepository;
+            this.genreValidator = genreValidator;
+        }
+
         public async Task<Genre> CreateAsync(Genre entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await genreValidator.ValidateAddAsync(entity).ConfigureAwait(false);
+                genreRepository.Add(entity);
+                await genreRepository.SaveChangesAsync().ConfigureAwait(false);
+                return entity;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<List<Genre>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await genreRepository.GetAllAsync().ConfigureAwait(false);
         }
 
         public async Task<Genre> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await genreRepository.GetAsync(id).ConfigureAwait(false);
         }
 
         public async Task<Genre> GetByConditionAsync(Expression<Func<Genre, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await genreRepository.GetByConditionAsync(expression).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(Genre entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var genreToRemove = await genreRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
+                genreRepository.Remove(genreToRemove);
+                await genreRepository.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                throw new BusinessLogicException("Error: Invalid genre.");
+            }
         }
 
         public async Task<Genre> UpdateAsync(Genre modifiedEntity, Genre originalEntity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var genreToUpdate = await genreRepository.GetByConditionAsync(s => s.Name == originalEntity.Name).ConfigureAwait(false);
+                modifiedEntity.Id = genreToUpdate.Id;
+                await genreValidator.ValidateUpdateAsync(modifiedEntity, genreToUpdate).ConfigureAwait(false);
+                genreRepository.Update(modifiedEntity);
+                await genreRepository.SaveChangesAsync().ConfigureAwait(false);
+                return modifiedEntity;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

@@ -12,32 +12,51 @@ namespace Iemedebe.BusinessLogic
 {
     public class DirectorLogic : ILogic<Director>
     {
-        public Task<Director> CreateAsync(Director entity)
+        private readonly IValidator<Director> directorValidator;
+        private readonly IRepository<Director> directorRepository;
+
+        public DirectorLogic(IRepository<Director> directorRepository, IValidator<Director> directorValidator)
+        {
+            this.directorValidator = directorValidator;
+            this.directorRepository = directorRepository;
+        }
+
+        public async Task<Director> CreateAsync(Director entity)
+        {
+            try
+            {
+                await directorValidator.ValidateAddAsync(entity).ConfigureAwait(false);
+                directorRepository.Add(entity);
+                await directorRepository.SaveChangesAsync().ConfigureAwait(false);
+                return entity;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<Director>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Director>> GetAllAsync()
+        public async Task<Director> GetAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Director> GetAsync(Guid id)
+        public async Task<Director> GetByConditionAsync(Expression<Func<Director, bool>> expression)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Director> GetByConditionAsync(Expression<Func<Director, bool>> expression)
+        public async Task RemoveAsync(Director entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveAsync(Director entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Director> UpdateAsync(Director modifiedEntity, Director originalEntity)
+        public async Task<Director> UpdateAsync(Director modifiedEntity, Director originalEntity)
         {
             throw new NotImplementedException();
         }
