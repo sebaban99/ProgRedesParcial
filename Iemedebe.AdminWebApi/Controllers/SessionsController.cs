@@ -7,11 +7,20 @@ using Iemedebe.DataAccess;
 using Iemedebe.Domain;
 using Iemedebe.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
+using System.Web;
+using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using RouteAttribute = System.Web.Http.RouteAttribute;
+using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
+using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
+using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
+using Microsoft.AspNetCore.Components;
 
 namespace Iemedebe.AdminWebApi
 {
     [Route("sessions")]
-    public class SessionsController : Controller
+    public class SessionsController : ApiController
     {
         private ISessionLogic sessionLogic;
 
@@ -21,7 +30,7 @@ namespace Iemedebe.AdminWebApi
         }
         
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDTO model)
+        public async Task<IHttpActionResult> Login([FromBody] LoginDTO model)
         {
             User loggedUser = await sessionLogic.ValidateLogin(model.Email, model.Password).ConfigureAwait(false);
             if (loggedUser == null)
@@ -36,8 +45,9 @@ namespace Iemedebe.AdminWebApi
         }
 
         [AuthenticationFilter()]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> LogOut(Guid id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> LogOut(Guid id)
         {
             try
             {

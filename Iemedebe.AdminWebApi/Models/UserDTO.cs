@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Server.IIS.Core;
@@ -22,6 +23,8 @@ namespace Iemedebe.AdminWebApi
         [Required]
         public string Password { get; set; }
 
+        public List<FilmDTO> FavouriteFilms { get; set; }
+
         public UserDTO() { }
 
         public UserDTO(User user)
@@ -31,19 +34,32 @@ namespace Iemedebe.AdminWebApi
             this.Email = user.Email;
             this.Birthday = user.Birthday;
             this.Password = user.Password;
+            this.FavouriteFilms = new List<FilmDTO>();
+            foreach (Film film in user.FavouriteFilms)
+            {
+                this.FavouriteFilms.Add(new FilmDTO(film));
+            }
         }
 
         public User ToEntity()
         {
-            return new User()
+            var user = new User()
             {
                 Nickname = this.Nickname,
                 FullName = this.FullName,
                 Email = this.Email,
                 Birthday = this.Birthday,
                 Password = this.Password,
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                FavouriteFilms = new List<Film>()
             };
+
+            foreach (FilmDTO filmDTO in this.FavouriteFilms)
+            {
+                user.FavouriteFilms.Add(filmDTO.ToEntity());
+            }
+
+            return user;
         }
     }
 }

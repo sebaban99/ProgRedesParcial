@@ -5,23 +5,33 @@ using System.Threading.Tasks;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
+using System.Web.Http;
+using System.Web;
+using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using RouteAttribute = System.Web.Http.RouteAttribute;
+using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
+using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using HttpPutAttribute = System.Web.Http.HttpPutAttribute;
+using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
+using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
 
 namespace Iemedebe.AdminWebApi.Controllers
 {
     [Route("users")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiController
     {
         private readonly ILogic<User> userLogic;
-
         public UsersController(ILogic<User> userLogic) : base()
         {
             this.userLogic = userLogic;
         }
 
+
+        // GET: /users
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
             await Task.Yield();
             try
@@ -36,9 +46,10 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        // POST: /users
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> PostAsync([FromBody]UserDTO model)
+        public async Task<IHttpActionResult> PostAsync([FromBody]UserDTO model)
         {
             await Task.Yield();
             try
@@ -54,17 +65,18 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        // GET: /users/{nickname}
         [HttpGet]
-        [Route("{nickname}")]
-        public async Task<IActionResult> GetAsync(string nickname)
+        [Route("{id}")]
+        public async Task<IHttpActionResult> GetAsync(Guid id)
         {
             await Task.Yield();
             try
             {
-                var user = await userLogic.GetByConditionAsync(u => u.Nickname == nickname).ConfigureAwait(false);
+                var user = await userLogic.GetAsync(id).ConfigureAwait(false);
                 if (user == null)
                 {
-                    return Ok("There is no user with the nickname: " + nickname);
+                    return Ok("There is no user with the id: " + id);
                 }
                 return Ok(new UserDTO(user));
             }
@@ -74,14 +86,15 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        // DELETE: /users/{nickname}
         [HttpDelete]
-        [Route("{nickname}")]
-        public async Task<IActionResult> DeleteAsync(string nickname)
+        [Route("{id}")]
+        public async Task<IHttpActionResult> DeleteAsync(Guid id)
         {
             await Task.Yield();
             try
             {
-                var userToDelete = await userLogic.GetByConditionAsync(u => u.Nickname == nickname).ConfigureAwait(false);
+                var userToDelete = await userLogic.GetAsync(id).ConfigureAwait(false);
                 await userLogic.RemoveAsync(userToDelete);
                 return Ok("User successfully deleted");
             }
@@ -91,15 +104,16 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        // PUT: /users/{id}
         [HttpPut]
-        [Route("{nickname}")]
-        public async Task<IActionResult> PutAsync(string nickname, [FromBody] UserDTO model)
+        [Route("{id}")]
+        public async Task<IHttpActionResult> PutAsync(Guid id, [FromBody] UserDTO model)
         {
             await Task.Yield();
             try
             {
              
-                var userToUpdate = await userLogic.GetByConditionAsync(u => u.Nickname == nickname).ConfigureAwait(false);
+                var userToUpdate = await userLogic.GetAsync(id).ConfigureAwait(false);
                 var updatedUser = model.ToEntity();
                 await userLogic.UpdateAsync(updatedUser, userToUpdate);
                 return Ok("User successfully updated");
@@ -109,6 +123,5 @@ namespace Iemedebe.AdminWebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
     }
 }

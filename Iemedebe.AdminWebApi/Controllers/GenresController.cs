@@ -5,12 +5,21 @@ using System.Threading.Tasks;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
+using System.Web.Http;
+using System.Web;
+using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using RouteAttribute = System.Web.Http.RouteAttribute;
+using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
+using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
+using HttpPutAttribute = System.Web.Http.HttpPutAttribute;
+using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
 
 namespace Iemedebe.AdminWebApi.Controllers
 {
     [Route("genres")]
     [ApiController]
-    public class GenresController : ControllerBase
+    public class GenresController : ApiController
     {
         private readonly ILogic<Genre> genreLogic;
 
@@ -21,7 +30,7 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IHttpActionResult> GetAllAsync()
         {
             await Task.Yield();
             try
@@ -38,7 +47,7 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> PostAsync([FromBody]GenreDTO model)
+        public async Task<IHttpActionResult> PostAsync([FromBody]GenreDTO model)
         {
             await Task.Yield();
             try
@@ -55,7 +64,7 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetAsync(Guid id)
+        public async Task<IHttpActionResult> GetAsync(Guid id)
         {
             await Task.Yield();
             try
@@ -75,7 +84,7 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        public async Task<IHttpActionResult> DeleteAsync(Guid id)
         {
             await Task.Yield();
             try
@@ -92,7 +101,7 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> PutAsync(Guid id, [FromBody] GenreDTO model)
+        public async Task<IHttpActionResult> PutAsync(Guid id, [FromBody] GenreDTO model)
         {
             await Task.Yield();
             try
