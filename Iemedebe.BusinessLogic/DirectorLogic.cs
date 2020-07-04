@@ -17,8 +17,8 @@ namespace Iemedebe.BusinessLogic
 
         public DirectorLogic(IRepository<Director> directorRepository, IValidator<Director> directorValidator)
         {
-            this.directorValidator = directorValidator;
             this.directorRepository = directorRepository;
+            this.directorValidator = directorValidator;
         }
 
         public async Task<Director> CreateAsync(Director entity)
@@ -38,27 +38,48 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<List<Director>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await directorRepository.GetAllAsync().ConfigureAwait(false);
         }
 
         public async Task<Director> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await directorRepository.GetAsync(id).ConfigureAwait(false);
         }
 
         public async Task<Director> GetByConditionAsync(Expression<Func<Director, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await directorRepository.GetByConditionAsync(expression).ConfigureAwait(false);
         }
 
         public async Task RemoveAsync(Director entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var directorToRemove = await directorRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
+                directorRepository.Remove(directorToRemove);
+                await directorRepository.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                throw new BusinessLogicException("Error: Invalid director.");
+            }
         }
 
         public async Task<Director> UpdateAsync(Director modifiedEntity, Director originalEntity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var directorToUpdate = await directorRepository.GetByConditionAsync(s => s.Name == originalEntity.Name).ConfigureAwait(false);
+                modifiedEntity.Id = directorToUpdate.Id;
+                await directorValidator.ValidateUpdateAsync(modifiedEntity, directorToUpdate).ConfigureAwait(false);
+                directorRepository.Update(modifiedEntity);
+                await directorRepository.SaveChangesAsync().ConfigureAwait(false);
+                return modifiedEntity;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
