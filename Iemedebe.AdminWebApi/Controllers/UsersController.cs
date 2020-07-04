@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using System.Web.Http;
 using System.Web;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
@@ -116,8 +116,8 @@ namespace Iemedebe.AdminWebApi.Controllers
              
                 var userToUpdate = await userLogic.GetAsync(id).ConfigureAwait(false);
                 var updatedUser = model.ToEntity();
-                await userLogic.UpdateAsync(updatedUser, userToUpdate);
-                return Ok("User successfully updated");
+                var updatedEntity = await userLogic.UpdateAsync(updatedUser, userToUpdate);
+                return Ok(new UserDTO(updatedEntity));
             }
             catch (Exception e)
             {

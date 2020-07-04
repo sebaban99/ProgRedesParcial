@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using System.Web.Http;
 using System.Web;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
@@ -110,8 +110,8 @@ namespace Iemedebe.AdminWebApi.Controllers
 
                 var directorToUpdate = await directorLogic.GetAsync(id).ConfigureAwait(false);
                 var updatedDirector = model.ToEntity();
-                await directorLogic.UpdateAsync(updatedDirector, directorToUpdate);
-                return Ok("Director successfully updated");
+                var updatedDir = await directorLogic.UpdateAsync(updatedDirector, directorToUpdate);
+                return Ok(new DirectorDTO(updatedDir));
             }
             catch (Exception e)
             {

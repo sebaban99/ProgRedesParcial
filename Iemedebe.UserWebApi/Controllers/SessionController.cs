@@ -6,7 +6,7 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
-using Iemedebe.CommonsWebApi;
+using Iemedebe.CommonWebApi;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
 using RouteAttribute = System.Web.Http.RouteAttribute;
 using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
@@ -14,6 +14,8 @@ using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
 using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
 using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Iemedebe.UserWebApi.Controllers
 {
@@ -22,43 +24,38 @@ namespace Iemedebe.UserWebApi.Controllers
     public class SessionController : ApiController
     {
 
-        private string baseURI = "http://localhost:8080/sessions";
+        private static string baseURI = "http://localhost:8080/api/sessions";
+        private HttpClient httpClient = new HttpClient();
+
 
         [HttpPost]
-        public IHttpActionResult Login([FromBody] LoginDTO model)
+        public async Task<IHttpActionResult> Login([FromBody] LoginDTO model)
         {
-            using (var client = new HttpClient())
+            var content = JsonConvert.SerializeObject(model);
+            var httpResponse = await httpClient.PostAsync(baseURI, new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
+
+            if (!httpResponse.IsSuccessStatusCode)
             {
-                var uri = new Uri(baseURI);
-                var response = client.GetAsync(uri).Result;
-                var responseMessage = response.RequestMessage.ToString();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return Ok(responseMessage);
-                }
-
-                return BadRequest(responseMessage);
+                return BadRequest(httpResponse.RequestMessage.ToString());
             }
+
+            var session = JsonConvert.DeserializeObject<Guid>(await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false));
+            return Ok(session.ToString());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IHttpActionResult LogOut(Guid id)
+        public async Task<IHttpActionResult> LogOut(Guid id)
         {
-            using (var client = new HttpClient())
+            var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}").ConfigureAwait(false);
+
+            if (!httpResponse.IsSuccessStatusCode)
             {
-                var uri = new Uri(baseURI);
-                var response = client.GetAsync(uri + "/" + id.ToString()).Result;
-                var responseMessage = response.RequestMessage.ToString();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return Ok(responseMessage);
-                }
-
-                return BadRequest(responseMessage);
+                return BadRequest(httpResponse.RequestMessage.ToString());
             }
+
+            return Ok();
+
         }
     }
 }
