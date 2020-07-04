@@ -47,14 +47,6 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(Film modifiedEntity, Film originalEntity)
         {
-            if (modifiedEntity.Name.Equals(originalEntity.Name))
-            {
-
-            }
-            else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
-            {
-                throw new BusinessLogicException("There is already a film with the same name\n");
-            }
             throw new NotImplementedException();
         }
 

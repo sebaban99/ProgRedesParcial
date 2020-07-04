@@ -47,14 +47,6 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(Genre modifiedEntity, Genre originalEntity)
         {
-            if (modifiedEntity.Name.Equals(originalEntity.Name))
-            {
-
-            }
-            else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
-            {
-                throw new BusinessLogicException("There is already a genre with the same name\n");
-            }
             throw new NotImplementedException();
         }
 
