@@ -21,9 +21,9 @@ namespace Iemedebe.AdminWebApi.Controllers
     [ApiController]
     public class FilmsController : ApiController
     {
-        private readonly ILogic<Film> filmLogic;
+        private readonly IFilmLogic<Film> filmLogic;
 
-        public FilmsController(ILogic<Film> filmLogic) : base()
+        public FilmsController(IFilmLogic<Film> filmLogic) : base()
         {
             this.filmLogic = filmLogic;
         }

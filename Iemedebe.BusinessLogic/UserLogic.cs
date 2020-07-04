@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace Iemedebe.BusinessLogic
 {
-    public class UserLogic: ILogic<User>
+    public class UserLogic: IUserLogic<User>
     {
         private readonly IValidator<User> userValidator;
         private readonly IRepository<User> userRepository;
@@ -19,6 +19,11 @@ namespace Iemedebe.BusinessLogic
         {
             this.userRepository = userRepository;
             this.userValidator = userValidator;
+        }
+
+        public async Task<User> AddFavouriteAsync(User entity, Film film)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<User> CreateAsync(User entity)
@@ -63,6 +68,11 @@ namespace Iemedebe.BusinessLogic
             {
                 throw new BusinessLogicException("Error: Invalid user.");
             }
+        }
+
+        public async Task<User> RemoveFavouriteAsync(User entity, Film film)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<User> UpdateAsync(User modifiedEntity, User originalEntity)
