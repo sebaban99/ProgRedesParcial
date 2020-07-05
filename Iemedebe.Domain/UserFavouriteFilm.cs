@@ -6,6 +6,7 @@ namespace Iemedebe.Domain
 {
     public class UserFavouriteFilm
     {
+        public Guid Id { get; set; }
         public Guid FilmId { get; set; }
         public Film Film { get; set; }
         public Guid UserId { get; set; }

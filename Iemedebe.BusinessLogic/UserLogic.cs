@@ -13,20 +13,23 @@ namespace Iemedebe.BusinessLogic
     {
         private readonly IUserValidator<User> userValidator;
         private readonly IRepository<User> userRepository;
+        private readonly IRepository<Film> filmRepository;
 
-        public UserLogic(IRepository<User> userRepository, IUserValidator<User> userValidator)
+        public UserLogic(IRepository<User> userRepository, IUserValidator<User> userValidator, IRepository<Film> filmRepository)
         {
             this.userRepository = userRepository;
+            this.filmRepository = filmRepository;
             this.userValidator = userValidator;
         }
 
-        public async Task<User> AddFavouriteAsync(User entity, Film film)
+        public async Task<User> AddFavouriteAsync(UserFavouriteFilm favourite)
         {
             try
             {
-                var userToUpdate = await userRepository.GetByConditionAsync(s => s.Nickname == entity.Nickname).ConfigureAwait(false);
-                await userValidator.ValidateDeleteFavouriteFilmAsync(userToUpdate, film);
-                // TODO: Remove favourite
+                var userToUpdate = await userRepository.GetAsync(favourite.UserId).ConfigureAwait(false);
+                var filmToFavourite = await filmRepository.GetAsync(favourite.FilmId).ConfigureAwait(false);
+                await userValidator.ValidateAddFavouriteFilmAsync(userToUpdate, filmToFavourite);
+                // TODO: Add favourite
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);
             }
@@ -80,12 +83,13 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        public async Task<User> RemoveFavouriteAsync(User entity, Film film)
+        public async Task<User> RemoveFavouriteAsync(Guid id, Guid favouriteId)
         {
             try
             {
-                var userToUpdate = await userRepository.GetByConditionAsync(s => s.Nickname == entity.Nickname).ConfigureAwait(false);
-                await userValidator.ValidateAddFavouriteFilmAsync(userToUpdate, film);
+                var userToUpdate = await userRepository.GetAsync(id).ConfigureAwait(false);
+                var filmToFavourite = await filmRepository.GetAsync(favouriteId).ConfigureAwait(false);
+                await userValidator.ValidateDeleteFavouriteFilmAsync(userToUpdate, filmToFavourite);
                 // TODO: Remove favourite
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);

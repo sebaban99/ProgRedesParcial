@@ -116,5 +116,36 @@ namespace Iemedebe.AdminWebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("{id}/favourites")]
+        public async Task<IActionResult> PostFavouriteAsync([FromBody]FavouriteDTO favouriteDTO)
+        {
+            await Task.Yield();
+            try
+            {
+                var favourite = favouriteDTO.ToEntity();
+                var user = await userLogic.AddFavouriteAsync(favourite).ConfigureAwait(false);
+                return Ok(new UserDTO(user));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("{id}/favourites/{idFavourite}")]
+        public async Task<IActionResult> DeleteFavouriteAsync(Guid id, Guid idFavourite)
+        {
+            await Task.Yield();
+            try
+            {
+                await userLogic.RemoveFavouriteAsync(id, idFavourite).ConfigureAwait(false);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

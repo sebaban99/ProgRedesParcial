@@ -8,7 +8,7 @@ namespace Iemedebe.BusinessLogic
 {
     public interface IUserLogic<T> : ILogic<T>
     {
-        Task<T> AddFavouriteAsync(T entity, Film film);
-        Task<T> RemoveFavouriteAsync(T entity, Film film);
+        Task<T> AddFavouriteAsync(UserFavouriteFilm favourite);
+        Task<T> RemoveFavouriteAsync(Guid id, Guid favouriteId);
     }
 }
