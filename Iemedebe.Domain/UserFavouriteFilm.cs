@@ -11,5 +11,18 @@ namespace Iemedebe.Domain
         public Film Film { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                UserFavouriteFilm f = (UserFavouriteFilm)obj;
+                return this.UserId.Equals(f.UserId) && this.FilmId.Equals(f.FilmId);
+            }
+        }
     }
 }

@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace Iemedebe.DataAccess
 {
-    public class FilmRepository : BaseRepository<Film>
+    public class FilmWithGenreRepository : BaseRepository<FilmWithGenre>
     {
-        public FilmRepository(DbContext context)
+        public FilmWithGenreRepository(DbContext context)
         {
             Context = context;
         }
 
-        public override async Task<Film> GetAsync(Guid id)
+        public override async Task<FilmWithGenre> GetAsync(Guid id)
         {
             try
             {
-                return await Context.Set<Film>().Include(f => f.Genres).FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                return await Context.Set<FilmWithGenre>().FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
             catch (System.InvalidOperationException)
             {
@@ -31,5 +31,6 @@ namespace Iemedebe.DataAccess
                 throw new DataAccessException("Error: could not get specific Entity");
             }
         }
+       
     }
 }

@@ -14,12 +14,15 @@ namespace Iemedebe.BusinessLogic
         private readonly IUserValidator<User> userValidator;
         private readonly IRepository<User> userRepository;
         private readonly IRepository<Film> filmRepository;
+        private readonly IRepository<UserFavouriteFilm> userFavouriteFilmRepo;
 
-        public UserLogic(IRepository<User> userRepository, IUserValidator<User> userValidator, IRepository<Film> filmRepository)
+        public UserLogic(IRepository<User> userRepository, IUserValidator<User> userValidator, 
+            IRepository<Film> filmRepository, IRepository<UserFavouriteFilm> userFavouriteFilmRepo)
         {
             this.userRepository = userRepository;
             this.filmRepository = filmRepository;
             this.userValidator = userValidator;
+            this.userFavouriteFilmRepo = userFavouriteFilmRepo;
         }
 
         public async Task<User> AddFavouriteAsync(UserFavouriteFilm favourite)
@@ -29,13 +32,25 @@ namespace Iemedebe.BusinessLogic
                 var userToUpdate = await userRepository.GetAsync(favourite.UserId).ConfigureAwait(false);
                 var filmToFavourite = await filmRepository.GetAsync(favourite.FilmId).ConfigureAwait(false);
                 await userValidator.ValidateAddFavouriteFilmAsync(userToUpdate, filmToFavourite);
-                // TODO: Add favourite
+                UserFavouriteFilm newAssocistion = new UserFavouriteFilm()
+                {
+                    Id = Guid.NewGuid(),
+                    Film = filmToFavourite,
+                    FilmId = filmToFavourite.Id,
+                    User = userToUpdate,
+                    UserId = userToUpdate.Id
+                };
+                userFavouriteFilmRepo.Add(newAssocistion);
+                userToUpdate.FavouriteFilms.Add(newAssocistion);
+                filmToFavourite.UserFavourites.Add(newAssocistion);
+                userRepository.Update(userToUpdate);
+                filmRepository.Update(filmToFavourite);
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -90,7 +105,15 @@ namespace Iemedebe.BusinessLogic
                 var userToUpdate = await userRepository.GetAsync(id).ConfigureAwait(false);
                 var filmToFavourite = await filmRepository.GetAsync(favouriteId).ConfigureAwait(false);
                 await userValidator.ValidateDeleteFavouriteFilmAsync(userToUpdate, filmToFavourite);
-                // TODO: Remove favourite
+
+                var associationToRemove = await userFavouriteFilmRepo.GetByConditionAsync(f => f.UserId == id && f.FilmId == favouriteId).ConfigureAwait(false);
+
+                userFavouriteFilmRepo.Remove(associationToRemove);
+                userToUpdate.FavouriteFilms.Remove(associationToRemove);
+                filmToFavourite.UserFavourites.Remove(associationToRemove);
+                userRepository.Update(userToUpdate);
+                filmRepository.Update(filmToFavourite);
+
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);
             }

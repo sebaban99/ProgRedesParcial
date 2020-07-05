@@ -32,7 +32,7 @@ namespace Iemedebe.BusinessLogic
         {
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateGenreExistsAsync(genre).ConfigureAwait(false);
-            ValidateFilmDoesNotAlreadyContainGenre(entity, genre);
+            await ValidateFilmDoesNotAlreadyContainGenre(entity, genre).ConfigureAwait(false);
         }
 
         public async Task ValidateDeleteAsync(Film entity)
@@ -47,7 +47,7 @@ namespace Iemedebe.BusinessLogic
         {
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateGenreExistsAsync(genre).ConfigureAwait(false);
-            ValidateFilmContainsGenre(entity, genre);
+            await ValidateFilmContainsGenreAsync(entity, genre).ConfigureAwait(false);
         }
 
         public async Task ValidateExistsAsync(Film entity)
@@ -61,7 +61,20 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(Film modifiedEntity, Film originalEntity)
         {
-            throw new NotImplementedException();
+            if(!await ExistsAsync(originalEntity).ConfigureAwait(false))
+            {
+                throw new BusinessLogicException("Error: The film you are trying to update does not exist");
+            }
+            else
+            {
+                if(modifiedEntity.Name != originalEntity.Name)
+                {
+                    if(await ExistsAsync(modifiedEntity).ConfigureAwait(false))
+                    {
+                        throw new BusinessLogicException("Error: A film with the same name already exists");
+                    }
+                }
+            }
         }
 
         private async Task<bool> ExistsAsync(Film entity)
@@ -72,7 +85,7 @@ namespace Iemedebe.BusinessLogic
             }
             catch (Exception e)
             {
-                return false;
+                throw new BusinessLogicException("Error: Could not ");
             }
         }
 
@@ -96,14 +109,34 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        private void ValidateFilmDoesNotAlreadyContainGenre(Film film, Genre genre)
+        private async Task ValidateFilmDoesNotAlreadyContainGenre(Film film, Genre genre)
         {
-            throw new NotImplementedException();
+            var filmInDB = await filmRepository.GetAsync(film.Id).ConfigureAwait(false);
+            if (ContainsGenre(filmInDB.Genres, genre.Id))
+            {
+                throw new BusinessLogicException("Error: The genre you are trying to add to film is already associated with this film");
+            }
         }
 
-        private void ValidateFilmContainsGenre(Film film, Genre genre)
+        private bool ContainsGenre(List<FilmWithGenre> list, Guid idGenre)
         {
-            throw new NotImplementedException();
+            foreach (FilmWithGenre filmWithGenre in list)
+            {
+                if(filmWithGenre.GenreId == idGenre)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task ValidateFilmContainsGenreAsync(Film film, Genre genre)
+        {
+            var filmInDB = await filmRepository.GetAsync(film.Id).ConfigureAwait(false);
+            if(!ContainsGenre(filmInDB.Genres, genre.Id))
+            {
+                throw new BusinessLogicException("Error: The genre you are trying to delete from film is no associated to this film");
+            }
         }
 
     }

@@ -61,7 +61,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // GET: /users/{nickname}
+        // GET: /users/{id} (id is Guid)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
@@ -81,7 +81,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // DELETE: /users/{nickname}
+        // DELETE: /users/{id} (id is Guid)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {

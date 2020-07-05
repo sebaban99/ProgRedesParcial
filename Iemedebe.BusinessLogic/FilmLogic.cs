@@ -13,27 +13,43 @@ namespace Iemedebe.BusinessLogic
     {
         private readonly IFilmValidator<Film> filmValidator;
         private readonly IRepository<Film> filmRepository;
+        private readonly IRepository<FilmWithGenre> filmWithGenreRepo;
+        private readonly IRepository<Genre> genreRepository;
 
-        public FilmLogic(IRepository<Film> filmRepository, IFilmValidator<Film> filmValidator)
+        public FilmLogic(IRepository<Film> filmRepository, IFilmValidator<Film> filmValidator, IRepository<FilmWithGenre> filmWithGenreRepo, IRepository<Genre> genreRepository)
         {
             this.filmRepository = filmRepository;
             this.filmValidator = filmValidator;
+            this.filmWithGenreRepo = filmWithGenreRepo;
+            this.genreRepository = genreRepository;
         }
 
-        public async Task<Film> AddGenreAsync(Film entity, Genre genre)
+        public async Task<Film> AddGenreAsync(Film film, Genre genre)
         {
             try
             {
-                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
-                await filmValidator.ValidateAddGenreAsync(filmToUpdate, genre);
-                // TODO: Add genre
+                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == film.Name).ConfigureAwait(false);
+                await filmValidator.ValidateAddGenreAsync(filmToUpdate, genre).ConfigureAwait(false);
+                FilmWithGenre newAssocistion = new FilmWithGenre()
+                {
+                    Id = Guid.NewGuid(),
+                    Film = film,
+                    FilmId = film.Id,
+                    Genre = genre,
+                    GenreId = genre.Id
+                };
+                filmWithGenreRepo.Add(newAssocistion);
+                film.Genres.Add(newAssocistion);
+                genre.FilmsAssociated.Add(newAssocistion);
+                genreRepository.Update(genre);
+                filmRepository.Update(film);
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
 
                 return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -51,9 +67,9 @@ namespace Iemedebe.BusinessLogic
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
                 return entity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -87,23 +103,31 @@ namespace Iemedebe.BusinessLogic
             }
             catch (Exception e)
             {
-                throw new BusinessLogicException("Error: Invalid film.");
+                throw new BusinessLogicException(e.Message);
             }
         }
 
-        public async Task<Film> RemoveGenreAsync(Film entity, Genre genre)
+        public async Task<Film> RemoveGenreAsync(Film film, Genre genre)
         {
             try
             {
-                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
+                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == film.Name).ConfigureAwait(false);
                 await filmValidator.ValidateDeleteGenreAsync(filmToUpdate, genre);
-                // TODO: Remove genre
+                var associationToRemove = await filmWithGenreRepo.GetByConditionAsync(f => f.GenreId == genre.Id && f.FilmId == film.Id).ConfigureAwait(false);
+                
+                filmWithGenreRepo.Remove(associationToRemove);
+                film.Genres.Remove(associationToRemove);
+                genre.FilmsAssociated.Remove(associationToRemove);
+                genreRepository.Update(genre);
+                filmRepository.Update(film);
+
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+
                 return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -123,9 +147,9 @@ namespace Iemedebe.BusinessLogic
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
     }

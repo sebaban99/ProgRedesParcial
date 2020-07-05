@@ -20,7 +20,7 @@ namespace Iemedebe.DataAccess
         {
             try
             {
-                return await Context.Set<User>().FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                return await Context.Set<User>().Include(u => u.FavouriteFilms).FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
             catch (System.InvalidOperationException)
             {

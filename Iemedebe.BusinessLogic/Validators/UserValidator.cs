@@ -63,8 +63,13 @@ namespace Iemedebe.BusinessLogic
         {
             if (modifiedEntity.Nickname.Equals(originalEntity.Nickname))
             {
-
-            } else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
+                var exists = await ExistsAsync(modifiedEntity).ConfigureAwait(false);
+                if (!exists)
+                {
+                    throw new BusinessLogicException("Error: User to update not found");
+                }
+            } 
+            else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
             {
                 throw new BusinessLogicException("There is already a user with the same nickname\n");
             }
@@ -83,13 +88,13 @@ namespace Iemedebe.BusinessLogic
         }
         private async Task ValidateFilmExistsAsync(Film film)
         {
-            if (!await Exists(film).ConfigureAwait(false))
+            if (!await ExistsFilmAsync(film).ConfigureAwait(false))
             {
                 throw new BusinessLogicException("Genre not found");
             }
         }
 
-        private async Task<bool> Exists(Film film)
+        private async Task<bool> ExistsFilmAsync(Film film)
         {
             try
             {
@@ -101,14 +106,34 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        private void ValidateUserDoesNotHaveFavouriteFilm(User user, Film film)
+        private async Task ValidateUserDoesNotHaveFavouriteFilm(User user, Film film)
         {
-            throw new NotImplementedException();
+            var userInDB = await userRepository.GetAsync(user.Id).ConfigureAwait(false);
+            if (ContainsFilm(userInDB.FavouriteFilms, film.Id))
+            {
+                throw new BusinessLogicException("Error: The genre you are trying to add to film is already associated with this film");
+            }
         }
 
-        private void ValidateUserHasFavouriteFilm(User user, Film film)
+        private bool ContainsFilm(List<UserFavouriteFilm> list, Guid idFilm)
         {
-            throw new NotImplementedException();
+            foreach (UserFavouriteFilm userFavourite in list)
+            {
+                if (userFavourite.FilmId == idFilm)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task ValidateUserHasFavouriteFilm(User user, Film film)
+        {
+            var userInDB = await userRepository.GetAsync(user.Id).ConfigureAwait(false);
+            if (!ContainsFilm(userInDB.FavouriteFilms, film.Id))
+            {
+                throw new BusinessLogicException("Error: The genre you are trying to add to film is already associated with this film");
+            }
         }
 
     }

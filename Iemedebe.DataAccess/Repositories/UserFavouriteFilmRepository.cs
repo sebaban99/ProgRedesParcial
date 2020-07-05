@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace Iemedebe.DataAccess
 {
-    public class FilmRepository : BaseRepository<Film>
+    public class UserFavouriteFilmRepository : BaseRepository<UserFavouriteFilm>
     {
-        public FilmRepository(DbContext context)
+        public UserFavouriteFilmRepository(DbContext context)
         {
             Context = context;
         }
 
-        public override async Task<Film> GetAsync(Guid id)
+        public override async Task<UserFavouriteFilm> GetAsync(Guid id)
         {
             try
             {
-                return await Context.Set<Film>().Include(f => f.Genres).FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                return await Context.Set<UserFavouriteFilm>().FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
             catch (System.InvalidOperationException)
             {
