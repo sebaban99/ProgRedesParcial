@@ -23,6 +23,19 @@ namespace Iemedebe.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sessions",
                 columns: table => new
                 {
@@ -60,8 +73,7 @@ namespace Iemedebe.DataAccess.Migrations
                     LaunchDate = table.Column<DateTime>(nullable: false),
                     AdditionDate = table.Column<DateTime>(nullable: false),
                     DirectorId = table.Column<Guid>(nullable: true),
-                    FilmScore = table.Column<int>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: true)
+                    FilmScore = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,32 +84,51 @@ namespace Iemedebe.DataAccess.Migrations
                         principalTable: "Directors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FilmFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    UploadDate = table.Column<DateTime>(nullable: false),
+                    Size = table.Column<double>(nullable: false),
+                    FilmId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FilmFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Films_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_FilmFiles_Films_FilmId",
+                        column: x => x.FilmId,
+                        principalTable: "Films",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genres",
+                name: "FilmsWithGenres",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    FilmId = table.Column<Guid>(nullable: true)
+                    GenreId = table.Column<Guid>(nullable: false),
+                    FilmId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
+                    table.PrimaryKey("PK_FilmsWithGenres", x => new { x.FilmId, x.GenreId });
                     table.ForeignKey(
-                        name: "FK_Genres_Films_FilmId",
+                        name: "FK_FilmsWithGenres_Films_FilmId",
                         column: x => x.FilmId,
                         principalTable: "Films",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FilmsWithGenres_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,20 +157,44 @@ namespace Iemedebe.DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UsersFavouriteFilms",
+                columns: table => new
+                {
+                    FilmId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersFavouriteFilms", x => new { x.FilmId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UsersFavouriteFilms_Films_FilmId",
+                        column: x => x.FilmId,
+                        principalTable: "Films",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UsersFavouriteFilms_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FilmFiles_FilmId",
+                table: "FilmFiles",
+                column: "FilmId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Films_DirectorId",
                 table: "Films",
                 column: "DirectorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Films_UserId",
-                table: "Films",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Genres_FilmId",
-                table: "Genres",
-                column: "FilmId");
+                name: "IX_FilmsWithGenres_GenreId",
+                table: "FilmsWithGenres",
+                column: "GenreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_RatedById",
@@ -150,12 +205,20 @@ namespace Iemedebe.DataAccess.Migrations
                 name: "IX_Ratings_RatedFilmId",
                 table: "Ratings",
                 column: "RatedFilmId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersFavouriteFilms_UserId",
+                table: "UsersFavouriteFilms",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Genres");
+                name: "FilmFiles");
+
+            migrationBuilder.DropTable(
+                name: "FilmsWithGenres");
 
             migrationBuilder.DropTable(
                 name: "Ratings");
@@ -164,13 +227,19 @@ namespace Iemedebe.DataAccess.Migrations
                 name: "Sessions");
 
             migrationBuilder.DropTable(
+                name: "UsersFavouriteFilms");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
+
+            migrationBuilder.DropTable(
                 name: "Films");
 
             migrationBuilder.DropTable(
-                name: "Directors");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Directors");
         }
     }
 }

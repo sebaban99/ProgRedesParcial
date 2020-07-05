@@ -7,7 +7,6 @@ namespace Iemedebe.CommonWebApi
 {
     public class DirectorDTO
     {
-        [Required]
         public Guid Id { get; set; }
 
         [Required]

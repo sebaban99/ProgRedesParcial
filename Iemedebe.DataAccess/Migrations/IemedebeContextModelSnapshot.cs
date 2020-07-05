@@ -66,16 +66,51 @@ namespace Iemedebe.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DirectorId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Films");
+                });
+
+            modelBuilder.Entity("Iemedebe.Domain.FilmFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("FilmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilmId");
+
+                    b.ToTable("FilmFiles");
+                });
+
+            modelBuilder.Entity("Iemedebe.Domain.FilmWithGenre", b =>
+                {
+                    b.Property<Guid>("FilmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FilmId", "GenreId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("FilmsWithGenres");
                 });
 
             modelBuilder.Entity("Iemedebe.Domain.Genre", b =>
@@ -87,15 +122,10 @@ namespace Iemedebe.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FilmId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FilmId");
 
                     b.ToTable("Genres");
                 });
@@ -164,22 +194,48 @@ namespace Iemedebe.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Iemedebe.Domain.UserFavouriteFilm", b =>
+                {
+                    b.Property<Guid>("FilmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FilmId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersFavouriteFilms");
+                });
+
             modelBuilder.Entity("Iemedebe.Domain.Film", b =>
                 {
                     b.HasOne("Iemedebe.Domain.Director", "Director")
                         .WithMany()
                         .HasForeignKey("DirectorId");
-
-                    b.HasOne("Iemedebe.Domain.User", null)
-                        .WithMany("FavouriteFilms")
-                        .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("Iemedebe.Domain.Genre", b =>
+            modelBuilder.Entity("Iemedebe.Domain.FilmFile", b =>
                 {
-                    b.HasOne("Iemedebe.Domain.Film", null)
-                        .WithMany("Genres")
+                    b.HasOne("Iemedebe.Domain.Film", "Film")
+                        .WithMany()
                         .HasForeignKey("FilmId");
+                });
+
+            modelBuilder.Entity("Iemedebe.Domain.FilmWithGenre", b =>
+                {
+                    b.HasOne("Iemedebe.Domain.Film", "Film")
+                        .WithMany("Genres")
+                        .HasForeignKey("FilmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Iemedebe.Domain.Genre", "Genre")
+                        .WithMany("FilmsAssociated")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Iemedebe.Domain.Rating", b =>
@@ -191,6 +247,21 @@ namespace Iemedebe.DataAccess.Migrations
                     b.HasOne("Iemedebe.Domain.Film", "RatedFilm")
                         .WithMany("Ratings")
                         .HasForeignKey("RatedFilmId");
+                });
+
+            modelBuilder.Entity("Iemedebe.Domain.UserFavouriteFilm", b =>
+                {
+                    b.HasOne("Iemedebe.Domain.Film", "Film")
+                        .WithMany("UserFavourites")
+                        .HasForeignKey("FilmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Iemedebe.Domain.User", "User")
+                        .WithMany("FavouriteFilms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

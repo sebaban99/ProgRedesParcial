@@ -7,6 +7,8 @@ namespace Iemedebe.CommonWebApi
 {
     public class UserDTO
     {
+        public Guid Id { get; set; }
+
         [Required]
         public string Nickname { get; set; }
 
@@ -33,11 +35,6 @@ namespace Iemedebe.CommonWebApi
             this.Email = user.Email;
             this.Birthday = user.Birthday;
             this.Password = user.Password;
-            this.FavouriteFilms = new List<FilmDTO>();
-            foreach (Film film in user.FavouriteFilms)
-            {
-                this.FavouriteFilms.Add(new FilmDTO(film));
-            }
         }
 
         public User ToEntity()
@@ -50,13 +47,9 @@ namespace Iemedebe.CommonWebApi
                 Birthday = this.Birthday,
                 Password = this.Password,
                 Id = Guid.NewGuid(),
-                FavouriteFilms = new List<Film>()
+            
             };
 
-            foreach (FilmDTO filmDTO in this.FavouriteFilms)
-            {
-                user.FavouriteFilms.Add(filmDTO.ToEntity());
-            }
 
             return user;
         }

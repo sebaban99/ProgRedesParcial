@@ -14,7 +14,7 @@ namespace Iemedebe.Domain
         public string Email { get; set; }
         public DateTime Birthday { get; set; }
         public string Password { get; set; }
-        public List<Film> FavouriteFilms { get; set; }
+        public List<UserFavouriteFilm> FavouriteFilms { get; set; }
 
 
         public override string ToString()

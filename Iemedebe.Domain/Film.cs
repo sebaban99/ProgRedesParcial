@@ -14,10 +14,11 @@ namespace Iemedebe.Domain
         public string Description { get; set; }
         public DateTime LaunchDate { get; set; }
         public DateTime AdditionDate { get; set; }
-        public List<Genre> Genres { get; set; }
+        public List<FilmWithGenre> Genres { get; set; }
         public Director Director { get; set; }
         public int FilmScore { get; set; }
         public List<Rating> Ratings { get; set; }
+        public List<UserFavouriteFilm> UserFavourites { get; set; }
 
         public override string ToString()
         {

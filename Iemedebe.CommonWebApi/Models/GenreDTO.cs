@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Iemedebe.Domain;
 
@@ -6,7 +7,6 @@ namespace Iemedebe.CommonWebApi
 {
     public class GenreDTO
     {
-        [Required]
         public Guid Id { get; set; }
 
         [Required]
@@ -15,6 +15,8 @@ namespace Iemedebe.CommonWebApi
         [Required]
         public string Description { get; set; }
 
+        public List<FilmDTO> FilmsAssociated { get; set; }
+
         public GenreDTO() { }
 
         public GenreDTO(Genre genre)
@@ -22,16 +24,20 @@ namespace Iemedebe.CommonWebApi
             this.Id = genre.Id;
             this.Name = genre.Name;
             this.Description = genre.Description;
+           
         }
 
         public Genre ToEntity()
         {
-            return new Genre()
+            var newGenre = new Genre()
             {
                 Name = this.Name,
                 Id = this.Id,
-                Description = this.Description
+                Description = this.Description,
+               
             };
+           
+            return newGenre;
         }
     }
 }
