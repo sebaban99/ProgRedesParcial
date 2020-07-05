@@ -24,11 +24,12 @@ namespace Iemedebe.BusinessLogic
         {
             try
             {
-                await filmValidator.ValidateAddGenreAsync(entity, genre);
+                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
+                await filmValidator.ValidateAddGenreAsync(filmToUpdate, genre);
                 // TODO: Add genre
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
 
-                return await filmRepository.GetAsync(entity.Id).ConfigureAwait(false);
+                return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -94,16 +95,16 @@ namespace Iemedebe.BusinessLogic
         {
             try
             {
-                await filmValidator.ValidateDeleteGenreAsync(entity, genre);
+                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == entity.Name).ConfigureAwait(false);
+                await filmValidator.ValidateDeleteGenreAsync(filmToUpdate, genre);
                 // TODO: Remove genre
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
-                return await filmRepository.GetAsync(entity.Id).ConfigureAwait(false);
+                return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 return null;
             }
-           
         }
 
         public Task RemoveRatingAsync(Guid idFilm, Guid idRating)

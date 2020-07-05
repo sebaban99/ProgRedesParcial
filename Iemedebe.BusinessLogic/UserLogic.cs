@@ -11,10 +11,10 @@ namespace Iemedebe.BusinessLogic
 {
     public class UserLogic: IUserLogic<User>
     {
-        private readonly IValidator<User> userValidator;
+        private readonly IUserValidator<User> userValidator;
         private readonly IRepository<User> userRepository;
 
-        public UserLogic(IRepository<User> userRepository, IValidator<User> userValidator)
+        public UserLogic(IRepository<User> userRepository, IUserValidator<User> userValidator)
         {
             this.userRepository = userRepository;
             this.userValidator = userValidator;
@@ -22,7 +22,18 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<User> AddFavouriteAsync(User entity, Film film)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userToUpdate = await userRepository.GetByConditionAsync(s => s.Nickname == entity.Nickname).ConfigureAwait(false);
+                await userValidator.ValidateDeleteFavouriteFilmAsync(userToUpdate, film);
+                // TODO: Remove favourite
+                await userRepository.SaveChangesAsync().ConfigureAwait(false);
+                return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<User> CreateAsync(User entity)
@@ -71,7 +82,18 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<User> RemoveFavouriteAsync(User entity, Film film)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userToUpdate = await userRepository.GetByConditionAsync(s => s.Nickname == entity.Nickname).ConfigureAwait(false);
+                await userValidator.ValidateAddFavouriteFilmAsync(userToUpdate, film);
+                // TODO: Remove favourite
+                await userRepository.SaveChangesAsync().ConfigureAwait(false);
+                return await userRepository.GetAsync(userToUpdate.Id).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<User> UpdateAsync(User modifiedEntity, User originalEntity)
