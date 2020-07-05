@@ -48,7 +48,6 @@ namespace Iemedebe.BusinessLogic
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateGenreExistsAsync(genre).ConfigureAwait(false);
             ValidateFilmContainsGenre(entity, genre);
-
         }
 
         public async Task ValidateExistsAsync(Film entity)

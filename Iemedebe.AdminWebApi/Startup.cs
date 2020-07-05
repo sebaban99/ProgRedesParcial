@@ -37,9 +37,9 @@ namespace Iemedebe.AdminWebApi
             services.AddScoped<ILogic<Film>, FilmLogic>();
             services.AddScoped<ILogic<Rating>, RatingLogic>();
 
-            services.AddScoped<IValidator<User>, UserValidator>();
+            services.AddScoped<IUserValidator<User>, UserValidator>();
             services.AddScoped<IValidator<Director>, DirectorValidator>();
-            services.AddScoped<IValidator<Film>, FilmValidator>();
+            services.AddScoped<IFilmValidator<Film>, FilmValidator>();
             services.AddScoped<IValidator<Rating>, RatingValidator>();
             services.AddScoped<IValidator<Genre>, GenreValidator>();
 
