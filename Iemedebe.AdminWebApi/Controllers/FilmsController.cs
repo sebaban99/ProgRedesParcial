@@ -20,10 +20,13 @@ namespace Iemedebe.AdminWebApi.Controllers
     public class FilmsController : ControllerBase
     {
         private readonly IFilmLogic<Film> filmLogic;
+        private readonly ILogic<Genre> genreLogic;
 
-        public FilmsController(IFilmLogic<Film> filmLogic) : base()
+
+        public FilmsController(IFilmLogic<Film> filmLogic, ILogic<Genre> genreLogic) : base()
         {
             this.filmLogic = filmLogic;
+            this.genreLogic = genreLogic;
         }
 
         [HttpGet()]
@@ -151,6 +154,40 @@ namespace Iemedebe.AdminWebApi.Controllers
             try
             {
                 await filmLogic.RemoveRatingAsync(id, idRating).ConfigureAwait(false);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("{id}/genres")]
+        public async Task<IActionResult> PostGenreAsync(Guid id, Guid idGenre)
+        {
+            await Task.Yield();
+            try
+            {
+                var filmInDB = await filmLogic.GetAsync(id).ConfigureAwait(false);
+                var genreInDB = await genreLogic.GetAsync(idGenre).ConfigureAwait(false);
+                var film = await filmLogic.AddGenreAsync(filmInDB, genreInDB).ConfigureAwait(false);
+                return Ok(new FilmDTO(film));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("{id}/genres/{idGenre}")]
+        public async Task<IActionResult> DeleteGenreAsync(Guid id, Guid idGenre)
+        {
+            await Task.Yield();
+            try
+            {
+                var filmInDB = await filmLogic.GetAsync(id).ConfigureAwait(false);
+                var genreInDB = await genreLogic.GetAsync(idGenre).ConfigureAwait(false);
+                await filmLogic.RemoveGenreAsync(filmInDB, genreInDB).ConfigureAwait(false);
                 return Ok();
             }
             catch (Exception e)
