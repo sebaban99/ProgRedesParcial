@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Iemedebe.BusinessLogic;
+using Iemedebe.Domain;
 
 namespace Iemedebe.AdminWebApi
 {
     public class AuthenticationFilter : Attribute, IAsyncAuthorizationFilter
     {
-        private ISessionLogic GetSessionLogic(AuthorizationFilterContext context)
+        private ISessionLogic<Session> GetSessionLogic(AuthorizationFilterContext context)
         {
-            var typeOfSessionsLogic = typeof(ISessionLogic);
-            return context.HttpContext.RequestServices.GetService(typeOfSessionsLogic) as ISessionLogic;
+            var typeOfSessionsLogic = typeof(ISessionLogic<Session>);
+            return context.HttpContext.RequestServices.GetService(typeOfSessionsLogic) as ISessionLogic<Session>;
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)

@@ -8,7 +8,7 @@ using Iemedebe.Exceptions;
 
 namespace Iemedebe.BusinessLogic
 {
-    public class SessionLogic : ISessionLogic
+    public class SessionLogic : ISessionLogic<Session>
     {
         private IRepository<User> userRepository;
         private ISessionRepository sessionRepository;
@@ -43,6 +43,11 @@ namespace Iemedebe.BusinessLogic
             };
             sessionRepository.Add(s);
             await sessionRepository.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<Session> GetAsync(Guid token)
+        {
+            return await sessionRepository.GetAsync(token).ConfigureAwait(false);
         }
 
         public async Task<User> ValidateLogin(string email, string password)

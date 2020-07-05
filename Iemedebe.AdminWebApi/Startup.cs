@@ -30,7 +30,7 @@ namespace Iemedebe.AdminWebApi
 
             //AddScoped Logic
             services.AddScoped<IFilmLogic<Film>, FilmLogic>();
-            services.AddScoped<ISessionLogic, SessionLogic>();
+            services.AddScoped<ISessionLogic<Session>, SessionLogic>();
             services.AddScoped<IUserLogic<User>, UserLogic>();
             services.AddScoped<ILogic<Director>, DirectorLogic>();
             services.AddScoped<ILogic<Genre>, GenreLogic>();

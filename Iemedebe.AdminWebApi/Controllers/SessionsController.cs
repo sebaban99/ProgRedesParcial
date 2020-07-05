@@ -21,11 +21,27 @@ namespace Iemedebe.AdminWebApi
     [ApiController]
     public class SessionsController : ControllerBase
     {
-        private ISessionLogic sessionLogic;
+        private ISessionLogic<Session> sessionLogic;
 
-        public SessionsController(ISessionLogic sessionLogic)
+        public SessionsController(ISessionLogic<Session> sessionLogic)
         {
             this.sessionLogic = sessionLogic;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(Guid id)
+        {
+            await Task.Yield();
+
+            var session = await sessionLogic.GetAsync(id).ConfigureAwait(false);
+            if (session == null)
+            {
+                return BadRequest("Login error: Incorrect email or password");
+            }
+            else
+            {
+                return Ok(new SessionDTO(session));
+            }
         }
 
         [HttpPost()]

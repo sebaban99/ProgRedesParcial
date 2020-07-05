@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Iemedebe.BusinessLogic;
 using Iemedebe.Domain;
 using System.Text;
+using Iemedebe.UserWebApi.Filters;
 
 namespace Iemedebe.UserWebApi.Controllers
 {
@@ -36,6 +37,7 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpGet()]
+        [ProtectFilter()]
         public async Task<IActionResult> GetAllAsync()
         {
             await Task.Yield();
@@ -60,6 +62,7 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpPost("{id}/ratings")]
+        [ProtectFilter()]
         public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
@@ -75,6 +78,7 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpPost("{id}/ratings/{idRating}")]
+        [ProtectFilter()]
         public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
@@ -90,6 +94,7 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpDelete("{id}/ratings/{idRating}")]
+        [ProtectFilter()]
         public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
             var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}/ratings/{idRating}").ConfigureAwait(false);

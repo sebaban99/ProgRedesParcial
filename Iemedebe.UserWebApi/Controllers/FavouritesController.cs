@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Iemedebe.BusinessLogic;
 using Iemedebe.Domain;
 using System.Text;
+using Iemedebe.UserWebApi.Filters;
 
 namespace Iemedebe.UserWebApi.Controllers
 {
@@ -36,6 +37,7 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpPost("{id}")]
+        [ProtectFilter()]
         public async Task<IActionResult> PostAsync([FromBody]FavouriteDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
@@ -51,9 +53,10 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProtectFilter()]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            var loggedUserId = ""
+            var loggedUserId = "";
             var httpResponse = await httpClient.DeleteAsync($"{baseURI}/{loggedUserId}/favourites/{id}").ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
