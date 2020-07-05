@@ -19,8 +19,8 @@ namespace Iemedebe.AdminWebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ILogic<User> userLogic;
-        public UsersController(ILogic<User> userLogic) : base()
+        private readonly IUserLogic<User> userLogic;
+        public UsersController(IUserLogic<User> userLogic) : base()
         {
             this.userLogic = userLogic;
         }
