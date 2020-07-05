@@ -7,29 +7,29 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 using Iemedebe.CommonWebApi;
-using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
-using RouteAttribute = System.Web.Http.RouteAttribute;
-using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
-using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
-using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
-using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
 using System.Net.Http;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace Iemedebe.UserWebApi.Controllers
 {
-    [Route("sessions")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class SessionController : ApiController
+    public class SessionController : ControllerBase
     {
 
-        private static string baseURI = "http://localhost:8080/api/sessions";
+        private static string baseURI = "https://localhost:5005/api/sessions";
         private HttpClient httpClient = new HttpClient();
 
 
-        [HttpPost]
-        public async Task<IHttpActionResult> Login([FromBody] LoginDTO model)
+        [HttpPost()]
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
             var httpResponse = await httpClient.PostAsync(baseURI, new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
@@ -43,9 +43,8 @@ namespace Iemedebe.UserWebApi.Controllers
             return Ok(session.ToString());
         }
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<IHttpActionResult> LogOut(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> LogOut(Guid id)
         {
             var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}").ConfigureAwait(false);
 

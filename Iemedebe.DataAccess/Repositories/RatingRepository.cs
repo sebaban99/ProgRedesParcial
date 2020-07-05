@@ -7,7 +7,7 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Iemedebe.DataAccess.Repositories
+namespace Iemedebe.DataAccess
 {
     public class RatingRepository : BaseRepository<Rating>
     {

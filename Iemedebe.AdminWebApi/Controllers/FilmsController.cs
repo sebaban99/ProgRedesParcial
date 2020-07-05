@@ -6,21 +6,18 @@ using Iemedebe.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Iemedebe.BusinessLogic;
 using Iemedebe.CommonWebApi;
-using System.Web.Http;
-using System.Web;
-using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
-using RouteAttribute = System.Web.Http.RouteAttribute;
-using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
-using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
-using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
-using HttpPutAttribute = System.Web.Http.HttpPutAttribute;
-using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 
 namespace Iemedebe.AdminWebApi.Controllers
 {
-    [Route("films")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class FilmsController : ApiController
+    public class FilmsController : ControllerBase
     {
         private readonly IFilmLogic<Film> filmLogic;
 
@@ -29,9 +26,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             this.filmLogic = filmLogic;
         }
 
-        [HttpGet]
-        [Route("")]
-        public async Task<IHttpActionResult> GetAllAsync()
+        [HttpGet()]
+        public async Task<IActionResult> GetAllAsync()
         {
             await Task.Yield();
             try
@@ -46,9 +42,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("")]
-        public async Task<IHttpActionResult> PostAsync([FromBody]FilmDTO model)
+        [HttpPost()]
+        public async Task<IActionResult> PostAsync([FromBody]FilmDTO model)
         {
             await Task.Yield();
             try
@@ -63,9 +58,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IHttpActionResult> GetAsync(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(Guid id)
         {
             await Task.Yield();
             try
@@ -83,9 +77,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<IHttpActionResult> DeleteAsync(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             await Task.Yield();
             try
@@ -100,9 +93,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<IHttpActionResult> PutAsync(Guid id, [FromBody] FilmDTO model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAsync(Guid id, [FromBody] FilmDTO model)
         {
             await Task.Yield();
             try
@@ -119,9 +111,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{id}/ratings")]
-        public async Task<IHttpActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
+        [HttpPost("{id}/ratings")]
+        public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
         {
             await Task.Yield();
             try
@@ -136,9 +127,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{id}/ratings/{idRating}")]
-        public async Task<IHttpActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO ratingDTO)
+        [HttpPost("{id}/ratings/{idRating}")]
+        public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO ratingDTO)
         {
             await Task.Yield();
             try
@@ -154,9 +144,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{id}/ratings/{idRating}")]
-        public async Task<IHttpActionResult> DeleteRatingAsync(Guid id, Guid idRating)
+        [HttpPost("{id}/ratings/{idRating}")]
+        public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
             await Task.Yield();
             try

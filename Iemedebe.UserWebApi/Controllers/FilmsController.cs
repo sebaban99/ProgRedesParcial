@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 using Iemedebe.CommonWebApi;
-using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
-using RouteAttribute = System.Web.Http.RouteAttribute;
-using RoutePrefixAttribute = System.Web.Http.RoutePrefixAttribute;
-using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
-using FromBodyAttribute = System.Web.Http.FromBodyAttribute;
-using HttpDeleteAttribute = System.Web.Http.HttpDeleteAttribute;
 using System.Net.Http;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
 using Newtonsoft.Json;
 using Iemedebe.BusinessLogic;
 using Iemedebe.Domain;
@@ -21,12 +21,12 @@ using System.Text;
 
 namespace Iemedebe.UserWebApi.Controllers
 {
-    [Route("films")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class FilmsController : ApiController
+    public class FilmsController : ControllerBase
     {
         private IFilmLogic<Film> filmLogic;
-        private string baseURI = "http://localhost:8080/api/films";
+        private string baseURI = "https://localhost:5005/api/films";
         private HttpClient httpClient;
 
         public FilmsController(IFilmLogic<Film> filmLogic)
@@ -35,9 +35,8 @@ namespace Iemedebe.UserWebApi.Controllers
             httpClient = new HttpClient();
         }
 
-        [HttpGet]
-        [Route("")]
-        public async Task<IHttpActionResult> GetAllAsync()
+        [HttpGet()]
+        public async Task<IActionResult> GetAllAsync()
         {
             await Task.Yield();
             try
@@ -60,9 +59,8 @@ namespace Iemedebe.UserWebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("{id}/ratings")]
-        public async Task<IHttpActionResult> PostRatingAsync([FromBody]RatingDTO model)
+        [HttpPost("{id}/ratings")]
+        public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
             var httpResponse = await httpClient.PostAsync(baseURI + $"{model.RatedFilm.Id}/ratings", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
@@ -76,9 +74,8 @@ namespace Iemedebe.UserWebApi.Controllers
             return Ok(film);
         }
 
-        [HttpPost]
-        [Route("{id}/ratings/{idRating}")]
-        public async Task<IHttpActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO model)
+        [HttpPost("{id}/ratings/{idRating}")]
+        public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
             var httpResponse = await httpClient.PutAsync($"{baseURI}{id}/ratings/{idRating}", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
@@ -92,9 +89,8 @@ namespace Iemedebe.UserWebApi.Controllers
             return Ok(updatedFilm);
         }
 
-        [HttpDelete]
-        [Route("{id}/ratings/{idRating}")]
-        public async Task<IHttpActionResult> DeleteRatingAsync(Guid id, Guid idRating)
+        [HttpDelete("{id}/ratings/{idRating}")]
+        public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
             var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}/ratings/{idRating}").ConfigureAwait(false);
 
