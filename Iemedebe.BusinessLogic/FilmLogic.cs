@@ -11,10 +11,10 @@ namespace Iemedebe.BusinessLogic
 {
     public class FilmLogic : IFilmLogic<Film>
     {
-        private readonly IValidator<Film> filmValidator;
+        private readonly IFilmValidator<Film> filmValidator;
         private readonly IRepository<Film> filmRepository;
 
-        public FilmLogic(IRepository<Film> filmRepository, IValidator<Film> filmValidator)
+        public FilmLogic(IRepository<Film> filmRepository, IFilmValidator<Film> filmValidator)
         {
             this.filmRepository = filmRepository;
             this.filmValidator = filmValidator;
@@ -22,7 +22,18 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<Film> AddGenreAsync(Film entity, Genre genre)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await filmValidator.ValidateAddGenreAsync(entity, genre);
+                // TODO: Add genre
+                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+
+                return await filmRepository.GetAsync(entity.Id).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Task<Film> AddRatingAsync(Rating rating)
@@ -81,7 +92,18 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<Film> RemoveGenreAsync(Film entity, Genre genre)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await filmValidator.ValidateDeleteGenreAsync(entity, genre);
+                // TODO: Remove genre
+                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+                return await filmRepository.GetAsync(entity.Id).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+           
         }
 
         public Task RemoveRatingAsync(Guid idFilm, Guid idRating)
