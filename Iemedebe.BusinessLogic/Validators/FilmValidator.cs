@@ -47,11 +47,20 @@ namespace Iemedebe.BusinessLogic
                 throw new BusinessLogicException("The film does not exist.");
             }
         }
+        private bool ValidateFilmHasOnlyOneGenre(Film film)
+        {
+            return film.Genres.Count == 1;
+        }
+
         public async Task ValidateDeleteGenreAsync(Film entity, Genre genre)
         {
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateGenreExistsAsync(genre).ConfigureAwait(false);
             await ValidateFilmContainsGenreAsync(entity, genre).ConfigureAwait(false);
+            if (ValidateFilmHasOnlyOneGenre(entity))
+            {
+                throw new BusinessLogicException("Error: Can't delete a genre from a movie if has only one genre");
+            }
         }
 
         public async Task ValidateExistsAsync(Film entity)

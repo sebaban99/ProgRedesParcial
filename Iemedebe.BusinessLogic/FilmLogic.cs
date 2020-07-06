@@ -38,17 +38,41 @@ namespace Iemedebe.BusinessLogic
                 await filmValidator.ValidateAddGenreAsync(filmToUpdate, genre).ConfigureAwait(false);
                 FilmWithGenre newAssocistion = new FilmWithGenre()
                 {
-                    Id = Guid.NewGuid(),
                     Film = film,
                     FilmId = film.Id,
                     Genre = genre,
                     GenreId = genre.Id
                 };
                 filmWithGenreRepo.Add(newAssocistion);
-                film.Genres.Add(newAssocistion);
-                genre.FilmsAssociated.Add(newAssocistion);
+                filmRepository.Update(filmToUpdate);
+                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+
+                foreach(FilmWithGenre fwg in filmToUpdate.Genres)
+                {
+                    fwg.Genre = await genreRepository.GetAsync(fwg.GenreId).ConfigureAwait(false);
+                }
+                return filmToUpdate;
+            }
+            catch (Exception e)
+            {
+                throw new BusinessLogicException(e.Message);
+            }
+        }
+
+        public async Task<Film> RemoveGenreAsync(Film film, Genre genre)
+        {
+            try
+            {
+                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == film.Name).ConfigureAwait(false);
+                await filmValidator.ValidateDeleteGenreAsync(filmToUpdate, genre);
+
+                var associationToRemove = await filmWithGenreRepo.GetByConditionAsync(f => f.GenreId == genre.Id && f.FilmId == film.Id).ConfigureAwait(false);
+
+                filmWithGenreRepo.Remove(associationToRemove);
+                film.Genres.Remove(associationToRemove);
                 genreRepository.Update(genre);
                 filmRepository.Update(film);
+
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
 
                 return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
@@ -111,6 +135,7 @@ namespace Iemedebe.BusinessLogic
         {
             filmToAdd.Id = Guid.NewGuid();
             filmToAdd.Genres[0].FilmId = filmToAdd.Id;
+            filmToAdd.Genres[0].Id = Guid.NewGuid();
             filmToAdd.AdditionDate = DateTime.Now;
         }
 
@@ -120,6 +145,7 @@ namespace Iemedebe.BusinessLogic
             {
                 await filmValidator.ValidateAddAsync(filmToAdd).ConfigureAwait(false);
                 FormatFilm(filmToAdd);
+                filmWithGenreRepo.Add(filmToAdd.Genres[0]);
                 filmRepository.Add(filmToAdd);
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
                 return filmToAdd;
@@ -132,8 +158,15 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<List<Film>> GetAllAsync()
         {
-            return await filmRepository.GetAllAsync().ConfigureAwait(false);
-
+            var filmsInDB =  await filmRepository.GetAllAsync().ConfigureAwait(false);
+            foreach(Film f in filmsInDB)
+            {
+                foreach (FilmWithGenre fwg in f.Genres)
+                {
+                    fwg.Genre = await genreRepository.GetAsync(fwg.GenreId).ConfigureAwait(false);
+                }
+            }
+            return filmsInDB;
         }
 
         public async Task<Film> GetAsync(Guid id)
@@ -146,7 +179,7 @@ namespace Iemedebe.BusinessLogic
             return await filmRepository.GetByConditionAsync(expression).ConfigureAwait(false);
         }
 
-       
+
         public async Task RemoveAsync(Film entity)
         {
             try
@@ -160,31 +193,6 @@ namespace Iemedebe.BusinessLogic
                 throw new BusinessLogicException(e.Message);
             }
         }
-
-        public async Task<Film> RemoveGenreAsync(Film film, Genre genre)
-        {
-            try
-            {
-                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == film.Name).ConfigureAwait(false);
-                await filmValidator.ValidateDeleteGenreAsync(filmToUpdate, genre);
-                var associationToRemove = await filmWithGenreRepo.GetByConditionAsync(f => f.GenreId == genre.Id && f.FilmId == film.Id).ConfigureAwait(false);
-                
-                filmWithGenreRepo.Remove(associationToRemove);
-                film.Genres.Remove(associationToRemove);
-                genre.FilmsAssociated.Remove(associationToRemove);
-                genreRepository.Update(genre);
-                filmRepository.Update(film);
-
-                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
-
-                return await filmRepository.GetAsync(filmToUpdate.Id).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                throw new BusinessLogicException(e.Message);
-            }
-        }
-
        
 
         public async Task<Film> UpdateAsync(Film modifiedEntity, Film originalEntity)
@@ -199,6 +207,7 @@ namespace Iemedebe.BusinessLogic
                 filmToUpdate.Description = modifiedEntity.Description;
                 filmToUpdate.LaunchDate = modifiedEntity.LaunchDate;
                 filmToUpdate.Director = director;
+                filmToUpdate.AdditionDate = filmToUpdate.AdditionDate;
 
                 filmRepository.Update(filmToUpdate);
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);

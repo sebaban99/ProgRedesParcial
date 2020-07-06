@@ -11,10 +11,15 @@ namespace Iemedebe.BusinessLogic
     public class GenreValidator : IValidator<Genre>
     {
         private readonly IRepository<Genre> genreRepository;
+        private readonly IRepository<Film> filmRepository;
+        private readonly IRepository<FilmWithGenre> fwgRepository;
 
-        public GenreValidator(IRepository<Genre> genreRepository)
+        public GenreValidator(IRepository<Genre> genreRepository, IRepository<Film> filmRepository, 
+            IRepository<FilmWithGenre> fwgRepository)
         {
+            this.fwgRepository = fwgRepository;
             this.genreRepository = genreRepository;
+            this.filmRepository = filmRepository;
         }
 
         public async Task ValidateAddAsync(Genre entity)
@@ -32,6 +37,15 @@ namespace Iemedebe.BusinessLogic
             if (!exists)
             {
                 throw new BusinessLogicException("The genre does not exist.");
+            }
+            var filmsWithGenre = await fwgRepository.GetAllByConditionAsync(f => f.GenreId == entity.Id).ConfigureAwait(false);
+            foreach(FilmWithGenre f in filmsWithGenre)
+            {
+                var filmInDB = await filmRepository.GetAsync(f.FilmId).ConfigureAwait(false);
+                if(filmInDB.Genres.Count == 1)
+                {
+                    throw new BusinessLogicException("Error: Can't delete this genre because it would leave a movie without genres");
+                }
             }
         }
 

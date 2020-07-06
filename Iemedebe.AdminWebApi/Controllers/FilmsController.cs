@@ -188,13 +188,13 @@ namespace Iemedebe.AdminWebApi.Controllers
         }
 
         [HttpPost("{id}/genres")]
-        public async Task<IActionResult> PostGenreAsync(Guid id, Guid idGenre)
+        public async Task<IActionResult> PostGenreAsync(Guid id, [FromBody] GenreDTO genreDTO)
         {
             await Task.Yield();
             try
             {
                 var filmInDB = await filmLogic.GetAsync(id).ConfigureAwait(false);
-                var genreInDB = await genreLogic.GetAsync(idGenre).ConfigureAwait(false);
+                var genreInDB = await genreLogic.GetAsync(genreDTO.Id).ConfigureAwait(false);
                 var film = await filmLogic.AddGenreAsync(filmInDB, genreInDB).ConfigureAwait(false);
                 return Ok(new FilmDTO(film));
             }
