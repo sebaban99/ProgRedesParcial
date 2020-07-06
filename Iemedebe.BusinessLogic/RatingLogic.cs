@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Iemedebe.BusinessLogic
 {
-    public class RatingLogic : ILogic<Rating>
+    public class RatingLogic : IRatingLogic<Rating>
     {
         private readonly IValidator<Rating> ratingValidator;
         private readonly IRepository<Rating> ratingRepository;
@@ -73,21 +73,27 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        public async Task<Rating> UpdateAsync(Rating modifiedEntity, Rating originalEntity)
+        public async Task<Rating> UpdateRatingAsync(Guid idRating, int score)
         {
             try
             {
-                var ratingToUpdate = await ratingRepository.GetByConditionAsync(s => s.RatedBy.Nickname == originalEntity.RatedBy.Nickname && s.RatedFilm.Name == originalEntity.RatedFilm.Name).ConfigureAwait(false);
-                modifiedEntity.Id = ratingToUpdate.Id;
-                await ratingValidator.ValidateUpdateAsync(modifiedEntity, ratingToUpdate).ConfigureAwait(false);
-                ratingRepository.Update(modifiedEntity);
+                var ratingToUpdate = await ratingRepository.GetAsync(idRating).ConfigureAwait(false);
+                ratingToUpdate.Score = score;
+                await ratingValidator.ValidateUpdateAsync(ratingToUpdate, ratingToUpdate).ConfigureAwait(false);
+
+                ratingRepository.Update(ratingToUpdate);
                 await ratingRepository.SaveChangesAsync().ConfigureAwait(false);
-                return modifiedEntity;
+                return ratingToUpdate;
             }
             catch (Exception e)
             {
                 throw new BusinessLogicException(e.Message);
             }
+        }
+
+        public Task<Rating> UpdateAsync(Rating modifiedEntity, Rating originalEntity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

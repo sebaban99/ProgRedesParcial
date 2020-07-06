@@ -20,6 +20,8 @@ namespace Iemedebe.CommonWebApi
 
         public DateTime AdditionDate { get; set; }
 
+        public int Score { get; set; }
+
         public List<GenreDTO> Genres { get; set; }
 
         [Required]
@@ -43,6 +45,7 @@ namespace Iemedebe.CommonWebApi
             this.Description = film.Description;
             this.LaunchDate = film.LaunchDate;
             this.AdditionDate = film.AdditionDate;
+            this.Score = film.FilmScore;
             if(film.Genres != null && film.Genres.Count != 0)
             {
                 this.MainGenreID = film.Genres[0].GenreId;
@@ -84,6 +87,7 @@ namespace Iemedebe.CommonWebApi
                 Description = this.Description,
                 LaunchDate = this.LaunchDate,
                 AdditionDate = this.AdditionDate,
+                FilmScore = this.Score,
                 Ratings = new List<Rating>(),
                 Genres = new List<FilmWithGenre>(),
                 UserFavourites = new List<UserFavouriteFilm>()

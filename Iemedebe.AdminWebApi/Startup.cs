@@ -34,7 +34,7 @@ namespace Iemedebe.AdminWebApi
             services.AddScoped<IUserLogic<User>, UserLogic>();
             services.AddScoped<ILogic<Director>, DirectorLogic>();
             services.AddScoped<ILogic<Genre>, GenreLogic>();
-            services.AddScoped<ILogic<Rating>, RatingLogic>();
+            services.AddScoped<IRatingLogic<Rating>, RatingLogic>();
 
             services.AddScoped<IUserValidator<User>, UserValidator>();
             services.AddScoped<IValidator<Director>, DirectorValidator>();

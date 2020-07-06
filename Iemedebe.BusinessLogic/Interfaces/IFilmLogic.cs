@@ -14,7 +14,7 @@ namespace Iemedebe.BusinessLogic
 
         Task<T> AddRatingAsync(Rating rating);
 
-        Task<T> PutRatingAsync(Guid idFilm, Rating rating);
+        Task<T> PutRatingAsync(Guid idRating, int score);
 
         Task RemoveRatingAsync(Guid idFilm, Guid idRating);
     }

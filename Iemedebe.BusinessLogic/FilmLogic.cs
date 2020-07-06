@@ -16,11 +16,11 @@ namespace Iemedebe.BusinessLogic
         private readonly IRepository<FilmWithGenre> filmWithGenreRepo;
         private readonly IRepository<Genre> genreRepository;
         private readonly IRepository<Director> directorRepository;
-        private readonly ILogic<Rating> ratingLogic;
+        private readonly IRatingLogic<Rating> ratingLogic;
 
         public FilmLogic(IRepository<Film> filmRepository, IFilmValidator<Film> filmValidator,
             IRepository<FilmWithGenre> filmWithGenreRepo, IRepository<Genre> genreRepository, IRepository<Director> directorRepository,
-           ILogic<Rating> ratingLogic)
+           IRatingLogic<Rating> ratingLogic)
         {
             this.filmRepository = filmRepository;
             this.filmValidator = filmValidator;
@@ -96,18 +96,15 @@ namespace Iemedebe.BusinessLogic
             await filmRepository.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
+        public async Task<Film> PutRatingAsync(Guid idRating, int score)
         {
-            var originalRating = await ratingLogic.GetAsync(rating.Id).ConfigureAwait(false);
-            var ratingUpdated = await ratingLogic.UpdateAsync(rating, originalRating);
-            var filmInDB = await filmRepository.GetAsync(idFilm).ConfigureAwait(false);
-            if (originalRating.Score != ratingUpdated.Score)
-            {
-                filmInDB.FilmScore = CalculateScore(filmInDB);
-                filmRepository.Update(filmInDB);
-                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
-            }
-            return await filmRepository.GetAsync(idFilm).ConfigureAwait(false);
+            var ratingUpdated = await ratingLogic.UpdateRatingAsync(idRating, score);
+            var filmInDB = await filmRepository.GetAsync(ratingUpdated.RatedFilm.Id).ConfigureAwait(false);
+            filmInDB.FilmScore = CalculateScore(filmInDB);
+            filmRepository.Update(filmInDB);
+            await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+
+            return filmInDB;
         }
 
         private void FormatFilm(Film filmToAdd)

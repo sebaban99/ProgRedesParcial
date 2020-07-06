@@ -133,7 +133,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        //[AuthenticationFilter()]
+        [AuthenticationFilter()]
         [HttpPost("{id}/ratings")]
         public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
         {
@@ -157,19 +157,12 @@ namespace Iemedebe.AdminWebApi.Controllers
 
         //Agregar filtrooo
         [HttpPut("{id}/ratings/{idRating}")]
-        public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO ratingDTO)
+        public async Task<IActionResult> PutRatingAsync(Guid idRating, [FromBody]RatingDTO ratingDTO)
         {
             await Task.Yield();
             try
             {
-                ratingDTO.Id = idRating;
-                var ratedFilm = await filmLogic.GetAsync(ratingDTO.RatedFilmId).ConfigureAwait(false);
-                var ratedByUser = await userLogic.GetAsync(ratingDTO.RatedById).ConfigureAwait(false);
-                ratedByUser.Id = ratingDTO.RatedById;
-                ratingDTO.RatedBy = new UserDTO(ratedByUser);
-                ratingDTO.RatedFilm = new FilmDTO(ratedFilm);
-                var rating = ratingDTO.ToEntity();
-                var film = await filmLogic.PutRatingAsync(id,rating).ConfigureAwait(false);
+                var film = await filmLogic.PutRatingAsync(idRating, ratingDTO.Score).ConfigureAwait(false);
                 return Ok(new FilmDTO(film));
             }
             catch (Exception e)
@@ -178,7 +171,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        //[AuthenticationFilter()]
+        [AuthenticationFilter()]
         [HttpDelete("{id}/ratings/{idRating}")]
         public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
