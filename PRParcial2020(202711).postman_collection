@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "b7e93798-3d5d-490a-b29a-30fecb47c910",
+		"name": "PR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Genre",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "id",
+						"value": "35ccb1a2-2f28-4295-6607-08d82121b9bd",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\":\"Accion\",\r\n    \"Description\":\"Explota\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/genres/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"genres",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddGenreToFilm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":\"65A57C0E-9DE4-4B0D-1C2D-08D821239938\",\r\n    \"Name\":\"Dramatic\",\r\n    \"Description\":\"Dramatico\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/films/A2BB18CE-69B3-47C3-98D8-1E42947087D0/genres",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"films",
+						"A2BB18CE-69B3-47C3-98D8-1E42947087D0",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveGenreFromFilm",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/films/A2BB18CE-69B3-47C3-98D8-1E42947087D0/genres/65A57C0E-9DE4-4B0D-1C2D-08D821239938",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"films",
+						"A2BB18CE-69B3-47C3-98D8-1E42947087D0",
+						"genres",
+						"65A57C0E-9DE4-4B0D-1C2D-08D821239938"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Nickname\":\"tomasH\",\r\n    \"FullName\":\"Tomas Haik\",\r\n    \"Email\":\"thaik@gmail.com\",\r\n    \"Birthday\":\"2019-03-04\",\r\n    \"Password\":\"pass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/users/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5005/api/users/76410510-c39b-4583-79b6-08d821be60a2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"users",
+						"76410510-c39b-4583-79b6-08d821be60a2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Director",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\":\"Juan Banales\",\r\n    \"Birthday\":\"2020-01-29\",\r\n    \"Gender\":\"male\",\r\n    \"Description\":\"Excellent one\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/directors/52C06D61-93E7-4369-DE3E-08D82126C47C",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"directors",
+						"52C06D61-93E7-4369-DE3E-08D82126C47C"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostFilm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ciclon 2\",\r\n    \"LaunchDate\": \"2020-02-01T00:00:00\",\r\n    \"Description\": \"Best movie ever\",\r\n    \"DirectorID\":\"52C06D61-93E7-4369-DE3E-08D82126C47C\",\r\n    \"MainGenreID\":\"00179140-B350-490F-83D1-08D821E0735E\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/films/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"films",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllFilms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5005/api/films/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"films",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "088f259a-cf0e-4646-8237-59d359ecaa05",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Email\":\"sebaban@gmail.com\",\r\n    \"Password\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5008/api/session/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5008",
+					"path": [
+						"api",
+						"session",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Favourite",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5008/api/Favourites/088F259A-CF0E-4646-8237-59D359ECAA05/favourites/E339C960-FB70-4805-8019-87E60DD09BDA?token=\"Insert User ID\"",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5008",
+					"path": [
+						"api",
+						"Favourites",
+						"088F259A-CF0E-4646-8237-59D359ECAA05",
+						"favourites",
+						"E339C960-FB70-4805-8019-87E60DD09BDA"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "\"Insert User ID\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rating",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "\"Insert User ID\"",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Score\": 3,\r\n    \"RatedFilmId\": \"E339C960-FB70-4805-8019-87E60DD09BDA\",\r\n    \"RatedById\": \"088F259A-CF0E-4646-8237-59D359ECAA05\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5008/api/films/E339C960-FB70-4805-8019-87E60DD09BDA/ratings",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5008",
+					"path": [
+						"api",
+						"films",
+						"E339C960-FB70-4805-8019-87E60DD09BDA",
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RatingDelete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "\"Insert User ID\"",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:5008/api/films/E339C960-FB70-4805-8019-87E60DD09BDA/ratings/d957250a-51dc-4b70-9efe-ffef715fa906",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5008",
+					"path": [
+						"api",
+						"films",
+						"E339C960-FB70-4805-8019-87E60DD09BDA",
+						"ratings",
+						"d957250a-51dc-4b70-9efe-ffef715fa906"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RatingPut",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "\"Insert User ID\"",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Score\": 1,\r\n    \"RatedFilmId\": \"E339C960-FB70-4805-8019-87E60DD09BDA\",\r\n    \"RatedById\": \"088F259A-CF0E-4646-8237-59D359ECAA05\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5008/api/films/E339C960-FB70-4805-8019-87E60DD09BDA/ratings/fb6a2701-093e-4a3e-bdd2-176d214b2c95",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5008",
+					"path": [
+						"api",
+						"films",
+						"E339C960-FB70-4805-8019-87E60DD09BDA",
+						"ratings",
+						"fb6a2701-093e-4a3e-bdd2-176d214b2c95"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FileUpload",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": "/C:/Users/sebaban99/Pictures/Cosmos04.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:5005/api/files/A2BB18CE-69B3-47C3-98D8-1E42947087D0",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"files",
+						"A2BB18CE-69B3-47C3-98D8-1E42947087D0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFilms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5005/api/films/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"films",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
