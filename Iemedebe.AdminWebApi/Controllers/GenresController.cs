@@ -99,8 +99,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             await Task.Yield();
             try
             {
-
                 var originalGenre = await genreLogic.GetAsync(id).ConfigureAwait(false);
+                model.Id = id;
                 var updatedGenre = model.ToEntity();
                 var modifiedEntity = await genreLogic.UpdateAsync(updatedGenre, originalGenre);
                 return Ok(new GenreDTO(modifiedEntity));

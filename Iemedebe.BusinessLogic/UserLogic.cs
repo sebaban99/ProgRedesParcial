@@ -126,9 +126,15 @@ namespace Iemedebe.BusinessLogic
             try
             {
                 var userToUpdate = await userRepository.GetByConditionAsync(s => s.Nickname == originalEntity.Nickname).ConfigureAwait(false);
-                modifiedEntity.Id = userToUpdate.Id;
                 await userValidator.ValidateUpdateAsync(modifiedEntity, userToUpdate).ConfigureAwait(false);
-                userRepository.Update(modifiedEntity);
+
+                userToUpdate.Nickname = modifiedEntity.Nickname;
+                userToUpdate.Email = modifiedEntity.Email;
+                userToUpdate.Birthday = modifiedEntity.Birthday;
+                userToUpdate.FullName = modifiedEntity.FullName;
+                userToUpdate.Password = modifiedEntity.Password;
+
+                userRepository.Update(userToUpdate);
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }

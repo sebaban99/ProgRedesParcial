@@ -61,17 +61,34 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(User modifiedEntity, User originalEntity)
         {
-            if (modifiedEntity.Nickname.Equals(originalEntity.Nickname))
+            if (modifiedEntity.Nickname.Equals(originalEntity.Nickname) &&
+                modifiedEntity.Email.Equals(originalEntity.Email))
             {
                 var exists = await ExistsAsync(modifiedEntity).ConfigureAwait(false);
                 if (!exists)
                 {
                     throw new BusinessLogicException("Error: User to update not found");
                 }
-            } 
+            }
+            else if (!modifiedEntity.Email.Equals(originalEntity.Email) && !modifiedEntity.Nickname.Equals(originalEntity.Nickname))
+            {
+                var existsMail = await ExistsUserWithMailAsync(modifiedEntity.Email).ConfigureAwait(false);
+                var existsNickName = await ExistsAsync(modifiedEntity).ConfigureAwait(false);
+                if (existsMail && existsNickName)
+                {
+                    throw new BusinessLogicException("Error: Email and nickname are already in use");
+                }
+            }
+            else if (!modifiedEntity.Email.Equals(originalEntity.Email)){
+                var existsMail = await ExistsUserWithMailAsync(modifiedEntity.Email).ConfigureAwait(false);
+                if (existsMail)
+                {
+                    throw new BusinessLogicException("Error: Email is already in use");
+                }
+            }
             else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
             {
-                throw new BusinessLogicException("There is already a user with the same nickname\n");
+                throw new BusinessLogicException("Error: There is already a user with the same nickname\n");
             }
         }
 
@@ -80,6 +97,18 @@ namespace Iemedebe.BusinessLogic
             try
             {
                 return await userRepository.GetByConditionAsync(s => s.Nickname == user.Nickname).ConfigureAwait(false) != null;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> ExistsUserWithMailAsync(string email)
+        {
+            try
+            {
+                return await userRepository.GetByConditionAsync(s => s.Email == email).ConfigureAwait(false) != null;
             }
             catch (Exception e)
             {

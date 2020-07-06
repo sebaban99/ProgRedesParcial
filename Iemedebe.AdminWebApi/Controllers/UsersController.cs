@@ -100,8 +100,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             await Task.Yield();
             try
             {
-             
                 var userToUpdate = await userLogic.GetAsync(id).ConfigureAwait(false);
+                model.Id = id;
                 var updatedUser = model.ToEntity();
                 var updatedEntity = await userLogic.UpdateAsync(updatedUser, userToUpdate);
                 return Ok(new UserDTO(updatedEntity));

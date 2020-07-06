@@ -69,9 +69,12 @@ namespace Iemedebe.BusinessLogic
             try
             {
                 var genreToUpdate = await genreRepository.GetByConditionAsync(s => s.Name == originalEntity.Name).ConfigureAwait(false);
-                modifiedEntity.Id = genreToUpdate.Id;
                 await genreValidator.ValidateUpdateAsync(modifiedEntity, genreToUpdate).ConfigureAwait(false);
-                genreRepository.Update(modifiedEntity);
+
+                genreToUpdate.Name = modifiedEntity.Name;
+                genreToUpdate.Description = modifiedEntity.Description;
+
+                genreRepository.Update(genreToUpdate);
                 await genreRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }

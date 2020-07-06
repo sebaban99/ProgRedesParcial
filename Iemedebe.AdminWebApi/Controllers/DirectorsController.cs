@@ -101,6 +101,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             {
 
                 var directorToUpdate = await directorLogic.GetAsync(id).ConfigureAwait(false);
+                model.Id = id;
                 var updatedDirector = model.ToEntity();
                 var updatedDir = await directorLogic.UpdateAsync(updatedDirector, directorToUpdate);
                 return Ok(new DirectorDTO(updatedDir));
