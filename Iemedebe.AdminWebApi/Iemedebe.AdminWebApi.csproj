@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0-preview1.19506.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
   </ItemGroup>
 
@@ -26,6 +27,10 @@
     <ProjectReference Include="..\Iemedebe.DataAccess\Iemedebe.DataAccess.csproj" />
     <ProjectReference Include="..\Iemedebe.Domain\Iemedebe.Domain.csproj" />
     <ProjectReference Include="..\Iemedebe.Exceptions\Iemedebe.Exceptions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 

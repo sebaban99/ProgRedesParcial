@@ -14,6 +14,9 @@ namespace Iemedebe.Domain
         public DateTime UploadDate { get; set; }
         public double Size { get; set; }
         public Film Film { get; set; }
+
+        public FilmFile() { }
+
         public override string ToString()
         {
             return Name + " | " + Size + " MB" + " | " + UploadDate;

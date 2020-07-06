@@ -27,5 +27,17 @@ namespace Iemedebe.DataAccess
                 throw new DataAccessException("Error: could not find the specified Entity");
             }
         }
+
+        public override async Task<List<FilmFile>> GetAllAsync()
+        {
+            try
+            {
+                return await Context.Set<FilmFile>().Include(ff => ff.Film).ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                throw new DataAccessException("Error: could not find the specified Entities");
+            }
+        }
     }
 }

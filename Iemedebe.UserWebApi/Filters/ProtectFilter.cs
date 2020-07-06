@@ -31,7 +31,7 @@ namespace Iemedebe.UserWebApi.Filters
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            string token = context.HttpContext.Request.Headers["Authorization"];
+            string token = context.HttpContext.Request.Headers["token"];
             var httpResponse = await httpClient.GetAsync($"{baseURI}/{token}").ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
