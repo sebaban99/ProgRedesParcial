@@ -42,7 +42,12 @@ namespace Iemedebe.BusinessLogic
 
         public async Task<Rating> GetAsync(Guid id)
         {
-            return await ratingRepository.GetAsync(id).ConfigureAwait(false);
+            var ratingInDB = await ratingRepository.GetAsync(id).ConfigureAwait(false);
+            if(ratingInDB == null)
+            {
+                throw new BusinessLogicException("Error: Could not find specified rating");
+            }
+            return ratingInDB;
         }
 
         public async Task<Rating> GetByConditionAsync(Expression<Func<Rating, bool>> expression)
@@ -54,7 +59,11 @@ namespace Iemedebe.BusinessLogic
         {
             try
             {
-                var ratingToRemove = await ratingRepository.GetByConditionAsync(s => s.RatedBy.Nickname == entity.RatedBy.Nickname && s.RatedFilm.Name == entity.RatedFilm.Name).ConfigureAwait(false);
+                var ratingToRemove = await ratingRepository.GetByConditionAsync(s => s.RatedBy.Id == entity.RatedBy.Id && s.RatedFilm.Id == entity.RatedFilm.Id).ConfigureAwait(false);
+                if(ratingToRemove == null)
+                {
+                    throw new BusinessLogicException("Error: Could not find rating to delete");
+                }
                 ratingRepository.Remove(ratingToRemove);
                 await ratingRepository.SaveChangesAsync().ConfigureAwait(false);
             }

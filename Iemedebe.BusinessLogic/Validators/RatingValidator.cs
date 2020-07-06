@@ -69,7 +69,7 @@ namespace Iemedebe.BusinessLogic
         {
             try
             {
-                return await ratingRepository.GetByConditionAsync(s => s.RatedFilm == entity.RatedFilm && s.RatedBy == entity.RatedBy).ConfigureAwait(false) != null;
+                return await ratingRepository.GetByConditionAsync(s => s.RatedFilm.Id == entity.RatedFilm.Id && s.RatedBy.Id == entity.RatedBy.Id).ConfigureAwait(false) != null;
             }
             catch (Exception e)
             {

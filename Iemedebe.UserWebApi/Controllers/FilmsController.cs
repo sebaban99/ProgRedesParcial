@@ -74,7 +74,7 @@ namespace Iemedebe.UserWebApi.Controllers
             return Ok(film);
         }
 
-        [HttpPost("{id}/ratings/{idRating}")]
+        [HttpPut("{id}/ratings/{idRating}")]
         public async Task<IActionResult> PutRatingAsync(Guid idRating, [FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
@@ -92,7 +92,7 @@ namespace Iemedebe.UserWebApi.Controllers
         [HttpDelete("{id}/ratings/{idRating}")]
         public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
-            var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}/ratings/{idRating}").ConfigureAwait(false);
+            var httpResponse = await httpClient.DeleteAsync($"{baseURI}/{id}/ratings/{idRating}").ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {

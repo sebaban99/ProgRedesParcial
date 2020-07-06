@@ -133,7 +133,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        //Agregar filtrooo
+        //[AuthenticationFilter()]
         [HttpPost("{id}/ratings")]
         public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
         {
@@ -155,7 +155,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost("{id}/ratings/{idRating}")]
+        //Agregar filtrooo
+        [HttpPut("{id}/ratings/{idRating}")]
         public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO ratingDTO)
         {
             await Task.Yield();
@@ -172,7 +173,8 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost("{id}/ratings/{idRating}")]
+        //[AuthenticationFilter()]
+        [HttpDelete("{id}/ratings/{idRating}")]
         public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
             await Task.Yield();

@@ -61,6 +61,10 @@ namespace Iemedebe.BusinessLogic
 
         private int CalculateScore(Film film)
         {
+            if (film.Ratings.Count == 0)
+            {
+                return 0;
+            }
             int totalScores = 0;
             foreach(Rating r in film.Ratings)
             {
@@ -81,14 +85,29 @@ namespace Iemedebe.BusinessLogic
             return filmInDB;
         }
 
-        public Task RemoveRatingAsync(Guid idFilm, Guid idRating)
+        public async Task RemoveRatingAsync(Guid idFilm, Guid idRating)
         {
-            throw new NotImplementedException();
+            var ratingInDB = await ratingLogic.GetAsync(idRating).ConfigureAwait(false);
+            await ratingLogic.RemoveAsync(ratingInDB).ConfigureAwait(false);
+            var filmInDB = await filmRepository.GetAsync(idFilm).ConfigureAwait(false);
+            filmInDB.Ratings.Remove(ratingInDB);
+            filmInDB.FilmScore = CalculateScore(filmInDB);
+            filmRepository.Update(filmInDB);
+            await filmRepository.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
+        public async Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
         {
-            throw new NotImplementedException();
+            var originalRating = await ratingLogic.GetAsync(rating.Id).ConfigureAwait(false);
+            var ratingUpdated = await ratingLogic.UpdateAsync(rating, originalRating);
+            var filmInDB = await filmRepository.GetAsync(idFilm).ConfigureAwait(false);
+            if (originalRating.Score != ratingUpdated.Score)
+            {
+                filmInDB.FilmScore = CalculateScore(filmInDB);
+                filmRepository.Update(filmInDB);
+                await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+            }
+            return await filmRepository.GetAsync(idFilm).ConfigureAwait(false);
         }
 
         private void FormatFilm(Film filmToAdd)
