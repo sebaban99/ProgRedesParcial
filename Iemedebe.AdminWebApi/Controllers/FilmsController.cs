@@ -155,7 +155,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        //Agregar filtrooo
+        [AuthenticationFilter()]
         [HttpPut("{id}/ratings/{idRating}")]
         public async Task<IActionResult> PutRatingAsync(Guid idRating, [FromBody]RatingDTO ratingDTO)
         {
