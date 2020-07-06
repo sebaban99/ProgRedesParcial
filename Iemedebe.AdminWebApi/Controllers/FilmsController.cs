@@ -204,7 +204,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        [HttpPost("{id}/genres/{idGenre}")]
+        [HttpDelete("{id}/genres/{idGenre}")]
         public async Task<IActionResult> DeleteGenreAsync(Guid id, Guid idGenre)
         {
             await Task.Yield();

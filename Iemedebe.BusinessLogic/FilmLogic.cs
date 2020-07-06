@@ -38,6 +38,7 @@ namespace Iemedebe.BusinessLogic
                 await filmValidator.ValidateAddGenreAsync(filmToUpdate, genre).ConfigureAwait(false);
                 FilmWithGenre newAssocistion = new FilmWithGenre()
                 {
+                    Id = Guid.NewGuid(),
                     Film = film,
                     FilmId = film.Id,
                     Genre = genre,
