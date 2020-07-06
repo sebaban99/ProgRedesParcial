@@ -24,7 +24,6 @@ namespace Iemedebe.CommonWebApi
             this.Id = genre.Id;
             this.Name = genre.Name;
             this.Description = genre.Description;
-           
         }
 
         public Genre ToEntity()
@@ -34,7 +33,7 @@ namespace Iemedebe.CommonWebApi
                 Name = this.Name,
                 Id = this.Id,
                 Description = this.Description,
-               
+                FilmsAssociated = new List<FilmWithGenre>()
             };
            
             return newGenre;

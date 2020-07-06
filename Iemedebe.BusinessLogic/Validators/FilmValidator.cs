@@ -21,6 +21,10 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateAddAsync(Film entity)
         {
+            if(entity.Director == null || entity.Genres.Count == 0)
+            {
+                throw new BusinessLogicException("Error: Film needs to have one director and at least one genre to be added successfully\n");
+            }
             var exists = await ExistsAsync(entity).ConfigureAwait(false);
             if (exists)
             {

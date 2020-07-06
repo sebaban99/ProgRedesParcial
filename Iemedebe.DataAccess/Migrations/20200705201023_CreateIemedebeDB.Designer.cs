@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Iemedebe.DataAccess.Migrations
 {
     [DbContext(typeof(IemedebeContext))]
-    [Migration("20200705055646_CreateIemedebeDB")]
+    [Migration("20200705201023_CreateIemedebeDB")]
     partial class CreateIemedebeDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +108,9 @@ namespace Iemedebe.DataAccess.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("FilmId", "GenreId");
 
                     b.HasIndex("GenreId");
@@ -202,6 +205,9 @@ namespace Iemedebe.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FilmId", "UserId");

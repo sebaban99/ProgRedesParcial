@@ -18,16 +18,18 @@ namespace Iemedebe.CommonWebApi
         [Required]
         public DateTime LaunchDate { get; set; }
 
-        [Required]
         public DateTime AdditionDate { get; set; }
 
-        [Required]
         public List<GenreDTO> Genres { get; set; }
 
         [Required]
-        public DirectorDTO Director { get; set; }
+        public Guid MainGenreID { get; set; }
 
         [Required]
+        public Guid DirectorID { get; set; }
+
+        public DirectorDTO Director { get; set; }
+
         public List<RatingDTO> Ratings { get; set; }
 
         public List<UserDTO> UserFavourites { get; set; }
@@ -41,17 +43,30 @@ namespace Iemedebe.CommonWebApi
             this.Description = film.Description;
             this.LaunchDate = film.LaunchDate;
             this.AdditionDate = film.AdditionDate;
-            this.Director = new DirectorDTO(film.Director);
+            //this.MainGenreID = film.Genres[0].GenreId;
+            if(film.Director != null)
+            {
+                this.Director = new DirectorDTO(film.Director);
+                this.DirectorID = film.Director.Id;
+            }
             this.Genres = new List<GenreDTO>();
             this.Ratings = new List<RatingDTO>();
-           
-         
-            foreach (Rating rating in film.Ratings)
+            if(film.Ratings != null)
             {
-                var ratingDTO = new RatingDTO(rating);
-                Ratings.Add(ratingDTO);
+                foreach (Rating rating in film.Ratings)
+                {
+                    var ratingDTO = new RatingDTO(rating);
+                    Ratings.Add(ratingDTO);
+                }
             }
-         
+            if (film.Genres != null)
+            {
+                foreach (FilmWithGenre fwg in film.Genres)
+                {
+                    var genreDTO = new GenreDTO(fwg.Genre);
+                    Genres.Add(genreDTO);
+                }
+            }
         }
 
         public Film ToEntity()
@@ -63,18 +78,54 @@ namespace Iemedebe.CommonWebApi
                 Description = this.Description,
                 LaunchDate = this.LaunchDate,
                 AdditionDate = this.AdditionDate,
-                Director = this.Director.ToEntity(),
-              
                 Ratings = new List<Rating>(),
-             
+                Genres = new List<FilmWithGenre>(),
+                UserFavourites = new List<UserFavouriteFilm>()
             };
 
-         
-            foreach (RatingDTO ratingDTO in this.Ratings)
+            if (this.Director != null)
             {
-                film.Ratings.Add(ratingDTO.ToEntity());
+                film.Director = this.Director.ToEntity();
             }
-            
+
+            if(Ratings != null)
+            {
+                foreach (RatingDTO ratingDTO in this.Ratings)
+                {
+                    film.Ratings.Add(ratingDTO.ToEntity());
+                }
+            }
+
+            if(Genres != null)
+            {
+                foreach (GenreDTO genreDTO in this.Genres)
+                {
+                    FilmWithGenre fwg = new FilmWithGenre()
+                    {
+                        Genre = genreDTO.ToEntity(),
+                        GenreId = genreDTO.Id,
+                        Film = film,
+                        FilmId = film.Id
+                    };
+                    film.Genres.Add(fwg);
+                }
+            }
+
+            if (UserFavourites != null)
+            {
+                foreach (UserDTO userDTO in this.UserFavourites)
+                {
+                    UserFavouriteFilm uff = new UserFavouriteFilm()
+                    {
+                        User = userDTO.ToEntity(),
+                        UserId = userDTO.Id,
+                        Film = film,
+                        FilmId = film.Id
+                    };
+                    film.UserFavourites.Add(uff);
+                }
+            }
+
 
             return film;
         }

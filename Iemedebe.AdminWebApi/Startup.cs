@@ -34,7 +34,6 @@ namespace Iemedebe.AdminWebApi
             services.AddScoped<IUserLogic<User>, UserLogic>();
             services.AddScoped<ILogic<Director>, DirectorLogic>();
             services.AddScoped<ILogic<Genre>, GenreLogic>();
-            services.AddScoped<ILogic<Film>, FilmLogic>();
             services.AddScoped<ILogic<Rating>, RatingLogic>();
 
             services.AddScoped<IUserValidator<User>, UserValidator>();
@@ -51,9 +50,13 @@ namespace Iemedebe.AdminWebApi
             services.AddScoped<IRepository<FilmFile>, FilmFileRepository>();
             services.AddScoped<IRepository<Rating>, RatingRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<IRepository<FilmWithGenre>, FilmWithGenreRepository>();
+            services.AddScoped<IRepository<UserFavouriteFilm>, UserFavouriteFilmRepository>();
+
+
 
             services.AddDbContext<DbContext, IemedebeContext>(
-               o => o.UseSqlServer(Configuration.GetConnectionString("Iemedebe")));
+               o => o.UseSqlServer(Configuration.GetConnectionString("Iemedebe")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

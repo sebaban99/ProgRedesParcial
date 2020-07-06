@@ -18,6 +18,7 @@ namespace Iemedebe.DataAccess
         {
             try
             {
+                Context.Entry(entity).State = EntityState.Added;
                 Context.Set<T>().Add(entity);
             }
             catch (DbException)
@@ -100,6 +101,7 @@ namespace Iemedebe.DataAccess
         {
             try
             {
+                Context.Entry(entity).State = EntityState.Detached;
                 Context.Entry(entity).State = EntityState.Modified;
                 Context.Set<T>().Update(entity);
             }

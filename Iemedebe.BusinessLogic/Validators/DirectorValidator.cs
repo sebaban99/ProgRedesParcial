@@ -46,7 +46,20 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(Director modifiedEntity, Director originalEntity)
         {
-            throw new NotImplementedException();
+            if (!await ExistsAsync(originalEntity).ConfigureAwait(false))
+            {
+                throw new BusinessLogicException("Error: The director you are trying to update does not exist");
+            }
+            else
+            {
+                if (modifiedEntity.Name != originalEntity.Name)
+                {
+                    if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
+                    {
+                        throw new BusinessLogicException("Error: A director with the same name already exists");
+                    }
+                }
+            }
         }
 
         private async Task<bool> ExistsAsync(Director entity)

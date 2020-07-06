@@ -22,7 +22,7 @@ namespace Iemedebe.BusinessLogic
             var exists = await ExistsAsync(entity).ConfigureAwait(false);
             if (exists)
             {
-                throw new BusinessLogicException("There is already a genre with the same name\n");
+                throw new BusinessLogicException("Error: There is already a genre with the same name\n");
             }
         }
 
@@ -48,7 +48,7 @@ namespace Iemedebe.BusinessLogic
         {
             if (!await ExistsAsync(originalEntity).ConfigureAwait(false))
             {
-                throw new BusinessLogicException("Error: The film you are trying to update does not exist");
+                throw new BusinessLogicException("Error: The genre you are trying to update does not exist");
             }
             else
             {
@@ -56,7 +56,7 @@ namespace Iemedebe.BusinessLogic
                 {
                     if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
                     {
-                        throw new BusinessLogicException("Error: A film with the same name already exists");
+                        throw new BusinessLogicException("Error: A genre with the same name already exists");
                     }
                 }
             }

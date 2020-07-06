@@ -112,7 +112,8 @@ namespace Iemedebe.DataAccess.Migrations
                 columns: table => new
                 {
                     GenreId = table.Column<Guid>(nullable: false),
-                    FilmId = table.Column<Guid>(nullable: false)
+                    FilmId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,7 +163,8 @@ namespace Iemedebe.DataAccess.Migrations
                 columns: table => new
                 {
                     FilmId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

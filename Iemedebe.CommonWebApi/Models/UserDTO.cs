@@ -35,6 +35,13 @@ namespace Iemedebe.CommonWebApi
             this.Email = user.Email;
             this.Birthday = user.Birthday;
             this.Password = user.Password;
+            this.FavouriteFilms = new List<FilmDTO>();
+
+            foreach(UserFavouriteFilm uff in user.FavouriteFilms)
+            {
+                var filmDTO = new FilmDTO(uff.Film);
+                FavouriteFilms.Add(filmDTO);
+            }
         }
 
         public User ToEntity()
@@ -46,9 +53,24 @@ namespace Iemedebe.CommonWebApi
                 Email = this.Email,
                 Birthday = this.Birthday,
                 Password = this.Password,
-                Id = Guid.NewGuid(),
-            
+                Id = this.Id,
+                FavouriteFilms = new List<UserFavouriteFilm>()
             };
+
+            if (FavouriteFilms != null)
+            {
+                foreach (FilmDTO filmDTO in this.FavouriteFilms)
+                {
+                    UserFavouriteFilm uff = new UserFavouriteFilm()
+                    {
+                        User = user,
+                        UserId = user.Id,
+                        Film = filmDTO.ToEntity(),
+                        FilmId = filmDTO.Id
+                    };
+                    user.FavouriteFilms.Add(uff);
+                }
+            }
 
 
             return user;

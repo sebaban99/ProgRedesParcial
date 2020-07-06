@@ -22,13 +22,9 @@ namespace Iemedebe.DataAccess
             {
                 return await Context.Set<Director>().FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
-            catch (System.InvalidOperationException)
+            catch (Exception e)
             {
-                return null;
-            }
-            catch (DbException)
-            {
-                throw new DataAccessException("Error: could not get specific Entity");
+                throw new DataAccessException("Error: could not find the specified Entity");
             }
         }
     }

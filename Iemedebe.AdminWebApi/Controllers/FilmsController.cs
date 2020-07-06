@@ -21,12 +21,13 @@ namespace Iemedebe.AdminWebApi.Controllers
     {
         private readonly IFilmLogic<Film> filmLogic;
         private readonly ILogic<Genre> genreLogic;
+        private readonly ILogic<Director> directorLogic;
 
-
-        public FilmsController(IFilmLogic<Film> filmLogic, ILogic<Genre> genreLogic) : base()
+        public FilmsController(IFilmLogic<Film> filmLogic, ILogic<Genre> genreLogic, ILogic<Director> directorLogic) : base()
         {
             this.filmLogic = filmLogic;
             this.genreLogic = genreLogic;
+            this.directorLogic = directorLogic;
         }
 
         [HttpGet()]
@@ -35,9 +36,13 @@ namespace Iemedebe.AdminWebApi.Controllers
             await Task.Yield();
             try
             {
+                List<FilmDTO> filmsInDB = new List<FilmDTO>();
                 var films = await filmLogic.GetAllAsync().ConfigureAwait(false);
-                IEnumerable<FilmDTO> filmsReturned = films.Select(u => new FilmDTO(u));
-                return Ok(filmsReturned);
+                foreach(Film f in films)
+                {
+                    filmsInDB.Add(new FilmDTO(f));
+                }
+                return Ok(filmsInDB);
             }
             catch (Exception e)
             {
@@ -50,8 +55,18 @@ namespace Iemedebe.AdminWebApi.Controllers
         {
             await Task.Yield();
             try
-            {
+            { 
                 var filmToCreate = model.ToEntity();
+                filmToCreate.Director = await directorLogic.GetAsync(model.DirectorID).ConfigureAwait(false);
+                filmToCreate.Genres = new List<FilmWithGenre>();
+                FilmWithGenre fwg = new FilmWithGenre()
+                {
+                    GenreId = model.MainGenreID,
+                    Genre = await genreLogic.GetAsync(model.MainGenreID).ConfigureAwait(false),
+                    Film = filmToCreate,
+                };
+                filmToCreate.Genres.Add(fwg);
+
                 var film = await filmLogic.CreateAsync(filmToCreate).ConfigureAwait(false);
                 return Ok(new FilmDTO(film));
             }
@@ -102,9 +117,10 @@ namespace Iemedebe.AdminWebApi.Controllers
             await Task.Yield();
             try
             {
-
                 var originalFilm = await filmLogic.GetAsync(id).ConfigureAwait(false);
+                model.Id = originalFilm.Id;
                 var updatedFilm = model.ToEntity();
+                updatedFilm.Director = await directorLogic.GetAsync(model.DirectorID).ConfigureAwait(false);
                 var modifiedEntity = await filmLogic.UpdateAsync(updatedFilm, originalFilm);
                 return Ok(new FilmDTO(modifiedEntity));
             }

@@ -106,6 +106,9 @@ namespace Iemedebe.DataAccess.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("FilmId", "GenreId");
 
                     b.HasIndex("GenreId");
@@ -200,6 +203,9 @@ namespace Iemedebe.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FilmId", "UserId");
