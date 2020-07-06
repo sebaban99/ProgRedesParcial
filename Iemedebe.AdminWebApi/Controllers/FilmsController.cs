@@ -163,6 +163,11 @@ namespace Iemedebe.AdminWebApi.Controllers
             try
             {
                 ratingDTO.Id = idRating;
+                var ratedFilm = await filmLogic.GetAsync(ratingDTO.RatedFilmId).ConfigureAwait(false);
+                var ratedByUser = await userLogic.GetAsync(ratingDTO.RatedById).ConfigureAwait(false);
+                ratedByUser.Id = ratingDTO.RatedById;
+                ratingDTO.RatedBy = new UserDTO(ratedByUser);
+                ratingDTO.RatedFilm = new FilmDTO(ratedFilm);
                 var rating = ratingDTO.ToEntity();
                 var film = await filmLogic.PutRatingAsync(id,rating).ConfigureAwait(false);
                 return Ok(new FilmDTO(film));

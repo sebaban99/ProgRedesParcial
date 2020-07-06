@@ -78,7 +78,7 @@ namespace Iemedebe.UserWebApi.Controllers
         public async Task<IActionResult> PutRatingAsync(Guid idRating, [FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
-            var httpResponse = await httpClient.PutAsync($"{baseURI}{model.RatedFilmId}/ratings/{idRating}", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
+            var httpResponse = await httpClient.PutAsync($"{baseURI}/{model.RatedFilmId}/ratings/{idRating}", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {
