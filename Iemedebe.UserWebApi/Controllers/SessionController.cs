@@ -46,7 +46,7 @@ namespace Iemedebe.UserWebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> LogOut(Guid id)
         {
-            var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}").ConfigureAwait(false);
+            var httpResponse = await httpClient.DeleteAsync($"{baseURI}/{id}").ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {

@@ -26,22 +26,19 @@ namespace Iemedebe.UserWebApi.Controllers
     [ApiController]
     public class FavouritesController : ControllerBase
     {
-        private IUserLogic<User> userLogic;
         private string baseURI = "https://localhost:5005/api/users";
         private HttpClient httpClient;
 
-        public FavouritesController(IUserLogic<User> userLogic)
+        public FavouritesController()
         {
-            this.userLogic = userLogic;
             httpClient = new HttpClient();
         }
 
-        [HttpPost("{id}")]
-        [ProtectFilter()]
+        [HttpPost()]
         public async Task<IActionResult> PostAsync([FromBody]FavouriteDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
-            var httpResponse = await httpClient.PostAsync(baseURI + $"{model.UserId}/favourites", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
+            var httpResponse = await httpClient.PostAsync(baseURI + $"/{model.UserId}/favourites", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {
@@ -53,7 +50,6 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProtectFilter()]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var loggedUserId = "";
