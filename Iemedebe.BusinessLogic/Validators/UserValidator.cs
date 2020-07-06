@@ -23,14 +23,14 @@ namespace Iemedebe.BusinessLogic
         {
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateFilmExistsAsync(film).ConfigureAwait(false);
-            ValidateUserDoesNotHaveFavouriteFilm(entity, film);
+            await ValidateUserDoesNotHaveFavouriteFilm(entity, film).ConfigureAwait(false);
         }
 
         public async Task ValidateDeleteFavouriteFilmAsync(User entity, Film film)
         {
             await ValidateExistsAsync(entity).ConfigureAwait(false);
             await ValidateFilmExistsAsync(film).ConfigureAwait(false);
-            ValidateUserHasFavouriteFilm(entity, film);
+            await ValidateUserHasFavouriteFilm(entity, film).ConfigureAwait(false);
         }
         public async Task ValidateAddAsync(User entity)
         {

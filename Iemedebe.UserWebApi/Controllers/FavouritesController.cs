@@ -49,11 +49,10 @@ namespace Iemedebe.UserWebApi.Controllers
             return Ok(user);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        [HttpDelete("{userId}/favourites/{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid userId,Guid id)
         {
-            var loggedUserId = "";
-            var httpResponse = await httpClient.DeleteAsync($"{baseURI}/{loggedUserId}/favourites/{id}").ConfigureAwait(false);
+            var httpResponse = await httpClient.DeleteAsync($"{baseURI}/{userId}/favourites/{id}").ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {

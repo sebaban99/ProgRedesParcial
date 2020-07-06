@@ -112,7 +112,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        //Add Filter
+        [AuthenticationFilter()]
         [HttpPost("{id}/favourites")]
         public async Task<IActionResult> PostFavouriteAsync([FromBody]FavouriteDTO favouriteDTO)
         {
@@ -130,7 +130,7 @@ namespace Iemedebe.AdminWebApi.Controllers
         }
 
         [AuthenticationFilter()]
-        [HttpPost("{id}/favourites/{idFavourite}")]
+        [HttpDelete("{id}/favourites/{idFavourite}")]
         public async Task<IActionResult> DeleteFavouriteAsync(Guid id, Guid idFavourite)
         {
             await Task.Yield();

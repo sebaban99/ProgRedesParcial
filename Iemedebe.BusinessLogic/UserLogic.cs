@@ -41,8 +41,6 @@ namespace Iemedebe.BusinessLogic
                     UserId = userToUpdate.Id
                 };
                 userFavouriteFilmRepo.Add(newAssocistion);
-                userToUpdate.FavouriteFilms.Add(newAssocistion);
-                filmToFavourite.UserFavourites.Add(newAssocistion);
                 userRepository.Update(userToUpdate);
                 filmRepository.Update(filmToFavourite);
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
@@ -63,9 +61,9 @@ namespace Iemedebe.BusinessLogic
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return entity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -119,7 +117,7 @@ namespace Iemedebe.BusinessLogic
             }
             catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -134,9 +132,9 @@ namespace Iemedebe.BusinessLogic
                 await userRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
     }
