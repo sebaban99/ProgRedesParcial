@@ -26,13 +26,11 @@ namespace Iemedebe.UserWebApi.Controllers
     [ApiController]
     public class FilmsController : ControllerBase
     {
-        private IFilmLogic<Film> filmLogic;
         private string baseURI = "https://localhost:5005/api/films";
         private HttpClient httpClient;
 
-        public FilmsController(IFilmLogic<Film> filmLogic)
+        public FilmsController()
         {
-            this.filmLogic = filmLogic;
             httpClient = new HttpClient();
         }
 
@@ -62,11 +60,10 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpPost("{id}/ratings")]
-        [ProtectFilter()]
         public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
-            var httpResponse = await httpClient.PostAsync(baseURI + $"{model.RatedFilm.Id}/ratings", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
+            var httpResponse = await httpClient.PostAsync(baseURI + $"/{model.RatedFilmId}/ratings", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {
@@ -78,11 +75,10 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpPost("{id}/ratings/{idRating}")]
-        [ProtectFilter()]
-        public async Task<IActionResult> PutRatingAsync(Guid id, Guid idRating, [FromBody]RatingDTO model)
+        public async Task<IActionResult> PutRatingAsync(Guid idRating, [FromBody]RatingDTO model)
         {
             var content = JsonConvert.SerializeObject(model);
-            var httpResponse = await httpClient.PutAsync($"{baseURI}{id}/ratings/{idRating}", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
+            var httpResponse = await httpClient.PutAsync($"{baseURI}{model.RatedFilmId}/ratings/{idRating}", new StringContent(content, Encoding.Default, "application/json")).ConfigureAwait(false);
 
             if (!httpResponse.IsSuccessStatusCode)
             {
@@ -94,7 +90,6 @@ namespace Iemedebe.UserWebApi.Controllers
         }
 
         [HttpDelete("{id}/ratings/{idRating}")]
-        [ProtectFilter()]
         public async Task<IActionResult> DeleteRatingAsync(Guid id, Guid idRating)
         {
             var httpResponse = await httpClient.DeleteAsync($"{baseURI}{id}/ratings/{idRating}").ConfigureAwait(false);

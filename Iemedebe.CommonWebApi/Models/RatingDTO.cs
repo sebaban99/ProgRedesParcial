@@ -1,6 +1,7 @@
 ﻿using Iemedebe.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Iemedebe.CommonWebApi
@@ -9,7 +10,14 @@ namespace Iemedebe.CommonWebApi
     {
         public Guid Id { get; set; }
 
+        [Required]
         public int Score { get; set; }
+
+        [Required]
+        public Guid RatedFilmId { get; set; }
+
+        [Required]
+        public Guid RatedById { get; set; }
 
         public FilmDTO RatedFilm { get; set; }
 
@@ -21,8 +29,8 @@ namespace Iemedebe.CommonWebApi
         {
             this.Id = rating.Id;
             this.Score = rating.Score;
-            this.RatedFilm = new FilmDTO(rating.RatedFilm);
-            this.RatedBy = new UserDTO(rating.RatedBy);
+            this.RatedFilmId = rating.RatedFilm.Id;
+            this.RatedById = rating.RatedBy.Id;
         }
 
         public Rating ToEntity()

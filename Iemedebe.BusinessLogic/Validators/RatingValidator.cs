@@ -17,8 +17,16 @@ namespace Iemedebe.BusinessLogic
             this.ratingRepository = ratingRepository;
         }
 
+        private bool IsScoreValid(int score)
+        {
+            return score >= 1 && score <= 5;
+        }
+
         public async Task ValidateAddAsync(Rating entity)
         {
+            if(!IsScoreValid(entity.Score)){
+                throw new BusinessLogicException("Error: Score must be between 1 and 5");
+            }
             var exists = await ExistsAsync(entity).ConfigureAwait(false);
             if (exists)
             {
@@ -46,15 +54,15 @@ namespace Iemedebe.BusinessLogic
 
         public async Task ValidateUpdateAsync(Rating modifiedEntity, Rating originalEntity)
         {
-            if (modifiedEntity.RatedFilm.Equals(originalEntity.RatedFilm) && modifiedEntity.RatedBy.Equals(originalEntity.RatedBy))
+            if (!IsScoreValid(modifiedEntity.Score))
             {
-
+                throw new BusinessLogicException("Error: Score must be between 1 and 5");
             }
-            else if (await ExistsAsync(modifiedEntity).ConfigureAwait(false))
+            var exists = await ExistsAsync(modifiedEntity).ConfigureAwait(false);
+            if (!exists)
             {
-                throw new BusinessLogicException("There is already a rating for that movie\n");
+                throw new BusinessLogicException("Error: The rating to update does not exist");
             }
-            throw new NotImplementedException();
         }
 
         private async Task<bool> ExistsAsync(Rating entity)

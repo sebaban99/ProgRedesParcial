@@ -16,15 +16,18 @@ namespace Iemedebe.BusinessLogic
         private readonly IRepository<FilmWithGenre> filmWithGenreRepo;
         private readonly IRepository<Genre> genreRepository;
         private readonly IRepository<Director> directorRepository;
+        private readonly ILogic<Rating> ratingLogic;
 
         public FilmLogic(IRepository<Film> filmRepository, IFilmValidator<Film> filmValidator,
-            IRepository<FilmWithGenre> filmWithGenreRepo, IRepository<Genre> genreRepository, IRepository<Director> directorRepository)
+            IRepository<FilmWithGenre> filmWithGenreRepo, IRepository<Genre> genreRepository, IRepository<Director> directorRepository,
+           ILogic<Rating> ratingLogic)
         {
             this.filmRepository = filmRepository;
             this.filmValidator = filmValidator;
             this.filmWithGenreRepo = filmWithGenreRepo;
             this.genreRepository = genreRepository;
             this.directorRepository = directorRepository;
+            this.ratingLogic = ratingLogic;
         }
 
         public async Task<Film> AddGenreAsync(Film film, Genre genre)
@@ -56,7 +59,34 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        public Task<Film> AddRatingAsync(Rating rating)
+        private int CalculateScore(Film film)
+        {
+            int totalScores = 0;
+            foreach(Rating r in film.Ratings)
+            {
+                totalScores += r.Score;
+            }
+            return totalScores / film.Ratings.Count;
+        }
+
+        public async Task<Film> AddRatingAsync(Rating rating)
+        {
+            var ratingCreated = await ratingLogic.CreateAsync(rating).ConfigureAwait(false);
+            var filmInDB = await filmRepository.GetAsync(ratingCreated.RatedFilm.Id).ConfigureAwait(false);
+            filmInDB.Ratings.Add(ratingCreated);
+            filmInDB.FilmScore = CalculateScore(filmInDB);
+            filmRepository.Update(filmInDB);
+            await filmRepository.SaveChangesAsync().ConfigureAwait(false);
+
+            return filmInDB;
+        }
+
+        public Task RemoveRatingAsync(Guid idFilm, Guid idRating)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
         {
             throw new NotImplementedException();
         }
@@ -100,11 +130,7 @@ namespace Iemedebe.BusinessLogic
             return await filmRepository.GetByConditionAsync(expression).ConfigureAwait(false);
         }
 
-        public Task<Film> PutRatingAsync(Guid idFilm, Rating rating)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public async Task RemoveAsync(Film entity)
         {
             try
@@ -143,10 +169,7 @@ namespace Iemedebe.BusinessLogic
             }
         }
 
-        public Task RemoveRatingAsync(Guid idFilm, Guid idRating)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<Film> UpdateAsync(Film modifiedEntity, Film originalEntity)
         {

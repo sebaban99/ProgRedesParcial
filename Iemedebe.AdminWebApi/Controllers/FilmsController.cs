@@ -20,14 +20,17 @@ namespace Iemedebe.AdminWebApi.Controllers
     public class FilmsController : ControllerBase
     {
         private readonly IFilmLogic<Film> filmLogic;
+        private readonly IUserLogic<User> userLogic;
         private readonly ILogic<Genre> genreLogic;
         private readonly ILogic<Director> directorLogic;
 
-        public FilmsController(IFilmLogic<Film> filmLogic, ILogic<Genre> genreLogic, ILogic<Director> directorLogic) : base()
+        public FilmsController(IFilmLogic<Film> filmLogic, ILogic<Genre> genreLogic, 
+            ILogic<Director> directorLogic, IUserLogic<User> userLogic) : base()
         {
             this.filmLogic = filmLogic;
             this.genreLogic = genreLogic;
             this.directorLogic = directorLogic;
+            this.userLogic = userLogic;
         }
 
         [HttpGet()]
@@ -130,12 +133,18 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        //Agregar filtrooo
         [HttpPost("{id}/ratings")]
         public async Task<IActionResult> PostRatingAsync([FromBody]RatingDTO ratingDTO)
         {
             await Task.Yield();
             try
             {
+                var ratedFilm = await filmLogic.GetAsync(ratingDTO.RatedFilmId).ConfigureAwait(false);
+                var ratedByUser = await userLogic.GetAsync(ratingDTO.RatedById).ConfigureAwait(false);
+                ratedByUser.Id = ratingDTO.RatedById;
+                ratingDTO.RatedBy = new UserDTO(ratedByUser);
+                ratingDTO.RatedFilm = new FilmDTO(ratedFilm);
                 var rating = ratingDTO.ToEntity();
                 var film = await filmLogic.AddRatingAsync(rating).ConfigureAwait(false);
                 return Ok(new FilmDTO(film));

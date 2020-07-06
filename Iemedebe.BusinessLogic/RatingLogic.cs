@@ -25,13 +25,13 @@ namespace Iemedebe.BusinessLogic
             try
             {
                 await ratingValidator.ValidateAddAsync(entity).ConfigureAwait(false);
+                entity.Id = Guid.NewGuid();
                 ratingRepository.Add(entity);
-                await ratingRepository.SaveChangesAsync().ConfigureAwait(false);
                 return entity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -60,7 +60,7 @@ namespace Iemedebe.BusinessLogic
             }
             catch (Exception e)
             {
-                throw new BusinessLogicException("Error: Invalid rating.");
+                throw new BusinessLogicException(e.Message);
             }
         }
 
@@ -75,9 +75,9 @@ namespace Iemedebe.BusinessLogic
                 await ratingRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new BusinessLogicException(e.Message);
             }
         }
     }

@@ -21,7 +21,8 @@ namespace Iemedebe.DataAccess
             try
             {
                 return await Context.Set<Film>().Include(f => f.Genres)
-                                                .Include(f => f.Director).FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                                                .Include(f => f.Director)
+                                                .Include(f => f.Ratings).FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
             catch (Exception e)
             {

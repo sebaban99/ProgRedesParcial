@@ -30,6 +30,7 @@ namespace Iemedebe.CommonWebApi
 
         public UserDTO(User user)
         {
+            this.Id = user.Id;
             this.Nickname = user.Nickname;
             this.FullName = user.FullName;
             this.Email = user.Email;
@@ -48,12 +49,12 @@ namespace Iemedebe.CommonWebApi
         {
             var user = new User()
             {
+                Id = this.Id,
                 Nickname = this.Nickname,
                 FullName = this.FullName,
                 Email = this.Email,
                 Birthday = this.Birthday,
                 Password = this.Password,
-                Id = this.Id,
                 FavouriteFilms = new List<UserFavouriteFilm>()
             };
 
