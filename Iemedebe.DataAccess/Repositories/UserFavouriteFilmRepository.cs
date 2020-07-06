@@ -20,7 +20,9 @@ namespace Iemedebe.DataAccess
         {
             try
             {
-                return await Context.Set<UserFavouriteFilm>().FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                return await Context.Set<UserFavouriteFilm>().Include(u => u.Film)
+                                                             .Include(u => u.User)
+                                                            .FirstAsync(x => x.Id == id).ConfigureAwait(false);
             }
             catch (Exception e)
             {

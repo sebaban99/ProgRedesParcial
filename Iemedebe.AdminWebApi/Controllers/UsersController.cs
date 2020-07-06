@@ -26,7 +26,6 @@ namespace Iemedebe.AdminWebApi.Controllers
         }
 
 
-        // GET: /users
         [HttpGet()]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -43,7 +42,6 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // POST: /users
         [HttpPost()]
         public async Task<IActionResult> PostAsync([FromBody]UserDTO model)
         {
@@ -61,7 +59,6 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // GET: /users/{id} (id is Guid)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
@@ -81,7 +78,6 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // DELETE: /users/{id} (id is Guid)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
@@ -98,7 +94,6 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
-        // PUT: /users/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, [FromBody] UserDTO model)
         {
@@ -117,6 +112,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        //Add Filter
         [HttpPost("{id}/favourites")]
         public async Task<IActionResult> PostFavouriteAsync([FromBody]FavouriteDTO favouriteDTO)
         {
@@ -133,6 +129,7 @@ namespace Iemedebe.AdminWebApi.Controllers
             }
         }
 
+        [AuthenticationFilter()]
         [HttpPost("{id}/favourites/{idFavourite}")]
         public async Task<IActionResult> DeleteFavouriteAsync(Guid id, Guid idFavourite)
         {

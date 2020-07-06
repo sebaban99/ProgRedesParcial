@@ -20,7 +20,21 @@ namespace Iemedebe.DataAccess
         {
             try
             {
-                return await Context.Set<Film>().Include(f => f.Genres).FirstAsync(x => x.Id == id).ConfigureAwait(false);
+                return await Context.Set<Film>().Include(f => f.Genres)
+                                                .Include(f => f.Director).FirstAsync(x => x.Id == id).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                throw new DataAccessException("Error: could not find the specified Entity");
+            }
+        }
+        public override async Task<List<Film>> GetAllAsync()
+        {
+            try
+            {
+                return await Context.Set<Film>().Include(f => f.Genres)
+                                                .Include(f => f.Director)
+                                                .ToListAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {

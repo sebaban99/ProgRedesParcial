@@ -43,8 +43,11 @@ namespace Iemedebe.CommonWebApi
             this.Description = film.Description;
             this.LaunchDate = film.LaunchDate;
             this.AdditionDate = film.AdditionDate;
-            //this.MainGenreID = film.Genres[0].GenreId;
-            if(film.Director != null)
+            if(film.Genres != null && film.Genres.Count != 0)
+            {
+                this.MainGenreID = film.Genres[0].GenreId;
+            }
+            if (film.Director != null)
             {
                 this.Director = new DirectorDTO(film.Director);
                 this.DirectorID = film.Director.Id;
@@ -63,8 +66,11 @@ namespace Iemedebe.CommonWebApi
             {
                 foreach (FilmWithGenre fwg in film.Genres)
                 {
-                    var genreDTO = new GenreDTO(fwg.Genre);
-                    Genres.Add(genreDTO);
+                    if(fwg.Genre != null)
+                    {
+                        var genreDTO = new GenreDTO(fwg.Genre);
+                        Genres.Add(genreDTO);
+                    }
                 }
             }
         }

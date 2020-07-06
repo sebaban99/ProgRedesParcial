@@ -56,7 +56,7 @@ namespace Iemedebe.AdminWebApi
 
 
             services.AddDbContext<DbContext, IemedebeContext>(
-               o => o.UseSqlServer(Configuration.GetConnectionString("Iemedebe")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+               o => o.UseSqlServer(Configuration.GetConnectionString("Iemedebe")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

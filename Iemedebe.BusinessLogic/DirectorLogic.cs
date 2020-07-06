@@ -71,7 +71,7 @@ namespace Iemedebe.BusinessLogic
                 var directorToUpdate = await directorRepository.GetByConditionAsync(s => s.Name == originalEntity.Name).ConfigureAwait(false);
                 modifiedEntity.Id = directorToUpdate.Id;
                 await directorValidator.ValidateUpdateAsync(modifiedEntity, directorToUpdate).ConfigureAwait(false);
-                //directorRepository.Update(modifiedEntity);
+                directorRepository.Update(modifiedEntity);
                 await directorRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }

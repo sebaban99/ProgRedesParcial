@@ -152,7 +152,7 @@ namespace Iemedebe.BusinessLogic
         {
             try
             {
-                var filmToUpdate = await filmRepository.GetByConditionAsync(s => s.Name == originalEntity.Name).ConfigureAwait(false);
+                var filmToUpdate = await filmRepository.GetAsync(originalEntity.Id).ConfigureAwait(false);
                 await filmValidator.ValidateUpdateAsync(modifiedEntity, filmToUpdate).ConfigureAwait(false);
                 
                 var director = await directorRepository.GetAsync(modifiedEntity.Director.Id).ConfigureAwait(false);
@@ -161,7 +161,7 @@ namespace Iemedebe.BusinessLogic
                 filmToUpdate.LaunchDate = modifiedEntity.LaunchDate;
                 filmToUpdate.Director = director;
 
-                filmRepository.Update(modifiedEntity);
+                filmRepository.Update(filmToUpdate);
                 await filmRepository.SaveChangesAsync().ConfigureAwait(false);
                 return modifiedEntity;
             }

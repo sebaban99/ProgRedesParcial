@@ -27,7 +27,7 @@ namespace Iemedebe.DataAccess
             }
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             try
             {
@@ -69,6 +69,7 @@ namespace Iemedebe.DataAccess
         {
             try
             {
+                Context.Entry(entity).State = EntityState.Deleted;
                 Context.Set<T>().Remove(entity);
             }
             catch (DbUpdateException)
@@ -101,7 +102,6 @@ namespace Iemedebe.DataAccess
         {
             try
             {
-                Context.Entry(entity).State = EntityState.Detached;
                 Context.Entry(entity).State = EntityState.Modified;
                 Context.Set<T>().Update(entity);
             }
