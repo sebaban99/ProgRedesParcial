@@ -38,3 +38,5 @@ El diseño de la web api utiliza HttpClient para así funcionar como proxy del A
 |Films/{filmId}/ratings/{ratingId}|-                               |-                                              |Crea un rating de un usuario para una película.|Elimina un rating de un usuario para una película.|
 |Favourites                       |-                               |Crea un favorito para un usuario.              |-                                              |-                                                 |
 |Favourites/{id}/favourites/{id}  |-                               |-                                              |-                                              |Elimina un favorito para un usuario.              |
+
+Notamos que el endpoint de favoritos debería de haber sido refactorizado, para tener una mejor nomenclatura. Ya que debería de haber seguido un formato más similar al planteado en admin web server.
